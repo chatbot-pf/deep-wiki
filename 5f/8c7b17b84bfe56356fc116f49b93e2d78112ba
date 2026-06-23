@@ -1,0 +1,42 @@
+.env.example
+  s_ee5283beea1e38::t_60e8ba871d5f72 1-6
+.github/workflows/generate.yml
+  s_ee5283beea1e38::t_6c491e5d84e726 1-98
+index.md
+  s_ee5283beea1e38::t_99907ffb4828a0 1-14
+repos/posttalks/index.md
+  s_ee5283beea1e38::t_3f9cb8c0e2bbb1 1-7
+repos/piuda/index.md
+  s_ee5283beea1e38::t_3c5657acb00e0a 1-7
+.vitepress/config.ts
+  s_ee5283beea1e38::t_8eeb67246b521a 1-84
+docs/source-repo-trigger.yml
+  s_ee5283beea1e38::t_80643804cff570 1-29
+.github/workflows/deploy.yml
+  s_ee5283beea1e38::t_dbef7eb8c87ccd 1-46
+docs/SETUP.md
+  s_ee5283beea1e38::t_efd2ac2297096b 1-74
+README.md
+  s_ee5283beea1e38::t_ef3604c0892f42 2-36
+.gitignore
+  s_ee5283beea1e38::t_da42bc0659ed7a 1-10
+package.json
+  s_ee5283beea1e38::t_1db554bccb8890 13-15
+  s_ee5283beea1e38::t_c72cca7014a45d 1-12,16-18
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.10",
+  "base_commit_sha": "5f8c7b17b84bfe56356fc116f49b93e2d78112ba",
+  "prompts": {},
+  "sessions": {
+    "s_ee5283beea1e38": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "7e770cc1-258e-4eb1-bfd8-a9bfc114ed74",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Minsu Lee <minsu.lee@passionfactory.ai>"
+    }
+  }
+}
