@@ -1,0 +1,24 @@
+docs/SETUP.md
+  s_ee5283beea1e38::t_4888e3346a5ee5 7-10,12-22,24-25,28-30,33-34
+  s_ee5283beea1e38::t_ce3c9f7fc4c330 81-128
+docs/kennen-source.json
+  s_ee5283beea1e38::t_3cd75dc8264be1 1-10
+README.md
+  s_ee5283beea1e38::t_ad896deb78fd63 16-17,19-20,22
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.10",
+  "base_commit_sha": "c72164974a489d4adc7a0b44e9e54211c95e77c2",
+  "prompts": {},
+  "sessions": {
+    "s_ee5283beea1e38": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "7e770cc1-258e-4eb1-bfd8-a9bfc114ed74",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Minsu Lee <minsu.lee@passionfactory.ai>"
+    }
+  }
+}
