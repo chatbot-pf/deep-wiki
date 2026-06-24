@@ -2,6 +2,7 @@
 name: wiki-qa
 description: Answers questions about a code repository using source file analysis. Use when the user asks a question about how something works, wants to understand a component, or needs help navigating the codebase.
 license: MIT
+user-invocable: false
 metadata:
   author: Microsoft
   version: "1.0.0"
@@ -38,13 +39,34 @@ Before answering any question, you MUST determine the source repository context:
 
 ## Response Format
 
-- Use `##` headings, code blocks with language tags, tables, bullet lists
-- Cite sources inline using resolved format:
+Follow this structure (drop sections that don't apply):
+
+```markdown
+## [Concise Answer Title]
+
+[1-2 paragraph direct answer]
+
+### How It Works
+[Detailed explanation with inline code citations and at least 1 Mermaid diagram when the answer involves architecture, flow, or relationships]
+
+### Key Files
+| File | Purpose | Source |
+|------|---------|--------|
+| `src/path/file.ts` | [Role in the system] | [linked citation] |
+
+### Code Example
+<!-- Source: file_path:line_number -->
+[Relevant snippet from actual source, if helpful]
+
+### Related
+- [Related concepts or files to explore]
+```
+
+- Cite sources inline using the resolved format:
   - **Remote**: `[src/path/file.ts:42](REPO_URL/blob/BRANCH/src/path/file.ts#L42)`
   - **Local**: `(src/path/file.ts:42)`
-- Include a "Key Files" table mapping files to their roles (with linked citations in the "File" column)
 - **Include at least 1 Mermaid diagram** when the answer involves architecture, data flow, or relationships — a diagram makes the answer 10x more useful
-- **Use tables** for any structured data in the answer (component lists, API endpoints, config options, comparisons)
+- **Use tables** for any structured data (component lists, API endpoints, config options, comparisons)
 - If information is insufficient, say so and suggest files to examine
 
 ## Rules
