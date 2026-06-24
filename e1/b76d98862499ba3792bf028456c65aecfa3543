@@ -1,0 +1,24 @@
+agents/wiki-architect.md
+  s_c89ea35ddb64d0::t_ce2aa94f56f558 6
+  s_c89ea35ddb64d0::t_8d46064d7c6e72 5,21,23,25,27
+agents/wiki-writer.md
+  s_c89ea35ddb64d0::t_3451b77d77593c 5-6,21,23,25,27
+agents/wiki-researcher.md
+  s_c89ea35ddb64d0::t_1ca173d9fa628c 5-6,21,23,25
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.11",
+  "base_commit_sha": "e1b76d98862499ba3792bf028456c65aecfa3543",
+  "prompts": {},
+  "sessions": {
+    "s_c89ea35ddb64d0": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "e97f68d3-92bf-40ce-9416-fdeeaf29e2f6",
+        "model": "unknown"
+      },
+      "human_author": "Minsu Lee <minsu.lee@passionfactory.ai>"
+    }
+  }
+}
