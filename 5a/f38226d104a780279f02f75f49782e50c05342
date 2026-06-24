@@ -1,0 +1,24 @@
+skills/wiki-site-core/references/adapter-contract.md
+  s_1c3d2151f563a4::t_6e373b9e0010e3 1-108
+skills/wiki-site-core/SKILL.md
+  s_1c3d2151f563a4::t_948d268d79e82b 1-51
+.please/docs/tracks/active/multi-tool-wiki-packaging-20260624/plan.md
+  s_1c3d2151f563a4::t_1196ad03e93a29 127
+  s_1c3d2151f563a4::t_20fce1635d2be6 53
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.11",
+  "base_commit_sha": "5af38226d104a780279f02f75f49782e50c05342",
+  "prompts": {},
+  "sessions": {
+    "s_1c3d2151f563a4": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "27e4161e-f4dc-490a-89cb-3e097c523fb6",
+        "model": "unknown"
+      },
+      "human_author": "Minsu Lee <minsu.lee@passionfactory.ai>"
+    }
+  }
+}
