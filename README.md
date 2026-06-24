@@ -1,6 +1,6 @@
 # 🌊 Deep Wiki
 
-> **Fork 안내**: 이 저장소는 [microsoft/skills](https://github.com/microsoft/skills)의 [`.github/plugins/deep-wiki`](https://github.com/microsoft/skills/tree/main/.github/plugins/deep-wiki) 플러그인을 fork한 버전입니다. 원본의 라이선스와 저작권은 upstream을 따릅니다.
+> **Fork notice**: This repository is a fork of the [`.github/plugins/deep-wiki`](https://github.com/microsoft/skills/tree/main/.github/plugins/deep-wiki) plugin from [microsoft/skills](https://github.com/microsoft/skills). The license and copyright of the original follow upstream.
 
 **AI-Powered Wiki Generator for Code Repositories — GitHub Copilot CLI Plugin**
 
