@@ -96,9 +96,9 @@ Scaffold a complete VitePress project in `wiki/` with:
 - Click-to-zoom for diagrams (custom SVG overlay with pan/zoom) and images (medium-zoom)
 - Dynamic sidebar from catalogue structure
 - Onboarding section first (uncollapsed)
-- **Proper `index.md` landing page** — Developer-focused, NOT a marketing page. No `hero:` frontmatter. Must contain: Quick Start with runnable commands, architecture overview diagram, documentation map table linking to all sections, key files table with source citations, and tech stack summary. See the `wiki-vitepress` skill (`references/vitepress-build.md`) for the full template.
+- **Proper `index.md` landing page** — Developer-focused, NOT a marketing page. No `hero:` frontmatter. Must contain: Quick Start with runnable commands, architecture overview diagram, documentation map table linking to all sections, key files table with source citations, and tech stack summary. See the `wiki-vitepress` skill ([`references/vitepress-build.md`](../skills/wiki-vitepress/references/vitepress-build.md)) for the full template.
 
-See the `wiki-vitepress` skill (and its `references/vitepress-build.md`) for full VitePress packaging details.
+See the `wiki-vitepress` skill (and its [`references/vitepress-build.md`](../skills/wiki-vitepress/references/vitepress-build.md)) for full VitePress packaging details.
 
 ### Step 7: Generate AGENTS.md Files (Only If Missing)
 

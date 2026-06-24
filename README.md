@@ -197,7 +197,9 @@ deep-wiki/
 │   ├── wiki-qa/
 │   │   └── SKILL.md
 │   ├── wiki-vitepress/
-│   │   └── SKILL.md         # VitePress packaging + dark-mode Mermaid
+│   │   ├── SKILL.md         # VitePress packaging + dark-mode Mermaid
+│   │   └── references/
+│   │       └── vitepress-build.md  # Full config, theme, CSS, zoom impl
 │   ├── wiki-onboarding/
 │   │   └── SKILL.md         # Onboarding guide generation
 │   ├── wiki-agents-md/

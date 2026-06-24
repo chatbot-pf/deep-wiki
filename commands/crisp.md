@@ -105,7 +105,7 @@ Create the full VitePress scaffolding in `wiki/`:
 - `wiki/.vitepress/theme/custom.css` — Full dark theme, Mermaid overrides, zoom CSS, focus mode CSS
 - `wiki/.vitepress/public/logo.svg` — Brand logo
 
-**Follow the `wiki-vitepress` skill (`references/vitepress-build.md`) for exact config, theme, and CSS specifications.** The key difference: do NOT run `npm install` or `npm run build` — just create the files. The GitHub Actions workflow will handle builds.
+**Follow the `wiki-vitepress` skill ([`references/vitepress-build.md`](../skills/wiki-vitepress/references/vitepress-build.md)) for exact config, theme, and CSS specifications.** The key difference: do NOT run `npm install` or `npm run build` — just create the files. The GitHub Actions workflow will handle builds.
 
 **Base path**: Check if this is a project site (needs `base: '/repo-name/'`) or user site (default `base: '/'`).
 
