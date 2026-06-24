@@ -61,7 +61,7 @@ flowchart TB
 - [x] T005 Add an explicit --tool selector to build.md (default vitepress) that loads the core + chosen adapter (file: commands/build.md) (depends on T003, T004)
 - [x] T006 Parametrize deploy.md from the chosen adapter's manifest — build command, output dir, Node version, base-path mechanism, extra files (.nojekyll) — replacing the hardcoded VitePress workflow (file: commands/deploy.md) (depends on T001, T005)
   STOP: keep the default (no --tool) deploy workflow byte-equivalent to today's VitePress workflow; a changed default would silently break existing users' Pages deploys.
-- [ ] T007 Update docs to reflect multi-tool packaging — wiki-vitepress as a thin pointer to the core, README skills/commands tables, and the adapter-contributor note (file: skills/wiki-vitepress/SKILL.md) (file: README.md) (depends on T003, T004, T005, T006)
+- [x] T007 Update docs to reflect multi-tool packaging — wiki-vitepress as a thin pointer to the core, README skills/commands tables, and the adapter-contributor note (file: skills/wiki-vitepress/SKILL.md) (file: README.md) (depends on T003, T004, T005, T006)
 
 ## Dependencies
 
@@ -130,6 +130,7 @@ Test expectation: none — documentation. Verified by review: README and wiki-vi
 - T004 ✅ — Authored `references/adapters/nextra.md`: manifest (native Mermaid, mdx, next-config base path, Node 22, `out/` + `.nojekyll`, zoom/focus false) + scaffold delta (package.json, next.config with `@theguild/remark-mermaid` + `output: export`, token→CSS-var mapping forced dark, `_meta` nav from core spec). STOP cleared — bare `<T>` handled by core `mdx` profile (escape + emit `.md`), no per-page hand-fixes. Baseline-parity gaps (zoom/focus) declared honestly. Smoke build deferred. Commit: T004.
 - T005 ✅ — Rewrote `commands/build.md` as a generator-neutral entrypoint: resolves `--tool <name>` → default `vitepress`; loads `wiki-site-core` + chosen adapter; unknown tool → list available. No-arg default reproduces today's VitePress build (regression-safe). Points at the unchanged `vitepress-build.md` for the full VitePress code. Commit: T005.
 - T006 ✅ — Rewrote `commands/deploy.md` to read the adapter manifest: `{node_version}`/`{build_cmd}`/`{output_dir}` placeholders, conditional `.nojekyll` step from `extra_files`, and base-path injection by `base_path.kind` (config-edit/next-config/env). STOP cleared — vitepress manifest (Node 20, npm run build, .vitepress/dist, empty extra_files) yields a byte-equivalent default workflow. Commit: T006.
+- T007 ✅ — `skills/wiki-vitepress/SKILL.md` rewritten as the VitePress adapter entry (thin pointer to wiki-site-core core + adapter contract + vitepress adapter; keeps trigger; vitepress-build.md remains authoritative code). README updated: build command (multi-tool, `--tool`), skills table (+wiki-site-core), How It Works step 4, pipeline diagram, and plugin structure tree (wiki-site-core subtree). Commit: T007.
 
 ## Decision Log
 
