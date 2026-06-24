@@ -2,6 +2,7 @@
 name: wiki-vitepress
 description: Packages generated wiki Markdown into a VitePress static site with dark theme, dark-mode Mermaid diagrams with click-to-zoom, and production build output. Use when the user wants to create a browsable website from generated wiki pages.
 license: MIT
+user-invocable: false
 metadata:
   author: Microsoft
   version: "1.0.0"
@@ -9,7 +10,7 @@ metadata:
 
 # Wiki VitePress Packager
 
-Transform generated wiki Markdown files into a polished VitePress static site with dark theme and interactive Mermaid diagrams.
+Transform generated wiki Markdown files into a polished VitePress static site with a dark theme and interactive Mermaid diagrams.
 
 ## When to Activate
 
@@ -17,143 +18,60 @@ Transform generated wiki Markdown files into a polished VitePress static site wi
 - User runs the `/deep-wiki:build` command
 - User wants a browsable HTML output from generated wiki pages
 
-## VitePress Scaffolding
+## Full Implementation Reference
 
-Generate the following structure in a `wiki-site/` directory:
+The complete, authoritative build spec — VitePress `config.mts`, `theme/index.ts` (image zoom, Mermaid SVG zoom overlay, focus mode), full `custom.css`, `package.json`, post-processing, and the wiki landing page — lives in **[references/vitepress-build.md](references/vitepress-build.md)**. Load and follow it when actually scaffolding or building the site. This page is the overview; the reference is the source of truth for all code.
 
-```
-wiki-site/
-├── .vitepress/
-│   ├── config.mts
-│   └── theme/
-│       ├── index.ts
-│       └── custom.css
-├── public/
-├── [generated .md pages]
-├── package.json
-└── index.md
-```
+## Overview & Key Principles
 
-## Config Requirements (`config.mts`)
+### Output Structure
 
-- Use `withMermaid` wrapper from `vitepress-plugin-mermaid`
-- Set `appearance: 'dark'` for dark-only theme
-- Configure `themeConfig.nav` and `themeConfig.sidebar` from the catalogue structure
-- Mermaid config must set dark theme variables:
+Scaffold a `wiki/` directory containing `package.json`, `.gitignore`, `index.md` (developer-focused landing page — **not** a marketing hero page), the generated section folders, `onboarding/`, and `.vitepress/` (`config.mts` + `theme/index.ts` + `theme/custom.css`). See the reference for the full tree.
 
-```typescript
-mermaid: {
-  theme: 'dark',
-  themeVariables: {
-    primaryColor: '#1e3a5f',
-    primaryTextColor: '#e0e0e0',
-    primaryBorderColor: '#4a9eed',
-    lineColor: '#4a9eed',
-    secondaryColor: '#2d4a3e',
-    tertiaryColor: '#2d2d3d',
-    background: '#1a1a2e',
-    mainBkg: '#1e3a5f',
-    nodeBorder: '#4a9eed',
-    clusterBkg: '#16213e',
-    titleColor: '#e0e0e0',
-    edgeLabelBackground: '#1a1a2e'
-  }
-}
-```
+### Dark-Mode Palette (canonical — use everywhere)
 
-## Dark-Mode Mermaid: Three-Layer Fix
+| Element | Background | Border | Text |
+|---------|-----------|--------|------|
+| Page background | `#0d1117` | — | `#e6edf3` |
+| Elevated surface | `#161b22` | `#30363d` | `#e6edf3` |
+| Card / Mermaid node | `#2d333b` | `#6d5dfc` | `#e6edf3` |
+| Secondary surface | `#1c2333` | `#6d5dfc` | `#e6edf3` |
+| Lines / arrows | — | `#8b949e` | — |
+| Brand accent | — | `#6d5dfc` | — |
 
-### Layer 1: Theme Variables (in config.mts)
-Set via `mermaid.themeVariables` as shown above.
+### Dark-Mode Mermaid: Three-Layer Fix
 
-### Layer 2: CSS Overrides (`custom.css`)
-Target Mermaid SVG elements with `!important`:
+Mermaid theming needs all three layers (full code in the reference):
 
-```css
-.mermaid .node rect,
-.mermaid .node circle,
-.mermaid .node polygon { fill: #1e3a5f !important; stroke: #4a9eed !important; }
-.mermaid .edgeLabel { background-color: #1a1a2e !important; color: #e0e0e0 !important; }
-.mermaid text { fill: #e0e0e0 !important; }
-.mermaid .label { color: #e0e0e0 !important; }
-```
+1. **Theme variables** — set `mermaid.theme: 'dark'` + comprehensive `themeVariables` in `config.mts`
+2. **CSS overrides** — force dark fills on `.mermaid` SVG shapes with `!important` in `custom.css`
+3. **Inline-style post-processing** — replace light-mode `style` directives in Mermaid blocks before build
 
-### Layer 3: Inline Style Replacement (`theme/index.ts`)
-Mermaid inline `style` attributes override everything. Use `onMounted` + polling to replace them:
+### Click-to-Zoom
 
-```typescript
-import { onMounted } from 'vue'
+Mermaid renders `<svg>` (not `<img>`), so `medium-zoom` won't work — a custom fullscreen overlay is required. Implementation notes that matter:
 
-// In setup()
-onMounted(() => {
-  let attempts = 0
-  const fix = setInterval(() => {
-    document.querySelectorAll('.mermaid svg [style]').forEach(el => {
-      const s = (el as HTMLElement).style
-      if (s.fill && !s.fill.includes('#1e3a5f')) s.fill = '#1e3a5f'
-      if (s.stroke && !s.stroke.includes('#4a9eed')) s.stroke = '#4a9eed'
-      if (s.color) s.color = '#e0e0e0'
-    })
-    if (++attempts >= 20) clearInterval(fix)
-  }, 500)
-})
-```
+- Use `setup()` + `onMounted` + route watcher, **not** `enhanceApp()` (no DOM during SSR)
+- **Poll** for async-rendered Mermaid SVGs (retry up to 20 × 500ms)
+- **Clone** the SVG (don't move it) and fix a missing `viewBox` from `getBBox()`
+- Mark containers with `data-zoom-attached` to avoid duplicate handlers on route changes
+- **Remove every `document`-level listener (`keydown`, `mousemove`, `mouseup`) in the close handler** so listeners don't leak across opens
 
-Use `setup()` with `onMounted`, NOT `enhanceApp()` — DOM doesn't exist during SSR.
+### Post-Processing Rules
 
-## Click-to-Zoom for Mermaid Diagrams
-
-Wrap each `.mermaid` container in a clickable wrapper that opens a fullscreen modal:
-
-```typescript
-document.querySelectorAll('.mermaid').forEach(el => {
-  el.style.cursor = 'zoom-in'
-  el.addEventListener('click', () => {
-    const modal = document.createElement('div')
-    modal.className = 'mermaid-zoom-modal'
-    modal.innerHTML = `<div class="mermaid">${el.innerHTML}</div>`
-
-    const close = () => {
-      modal.remove()
-      document.removeEventListener('keydown', esc)
-    }
-
-    function esc(e: KeyboardEvent) {
-      if (e.key === 'Escape') close()
-    }
-
-    modal.addEventListener('click', close)
-    document.addEventListener('keydown', esc)
-    document.body.appendChild(modal)
-  })
-})
-```
-
-Modal CSS:
-```css
-.mermaid-zoom-modal {
-  position: fixed; inset: 0;
-  background: rgba(0,0,0,0.9);
-  display: flex; align-items: center; justify-content: center;
-  z-index: 9999; cursor: zoom-out;
-}
-.mermaid-zoom-modal .mermaid { transform: scale(1.5); }
-```
-
-## Post-Processing Rules
-
-Before VitePress build, scan all `.md` files and fix:
+Before building, scan all `.md` files and fix:
 - Replace `<br/>` with `<br>` (Vue template compiler compatibility)
 - Wrap bare `<T>` generic parameters in backticks outside code fences
+- Validate Mermaid hex colors (3 or 6 digits)
 - Ensure every page has YAML frontmatter with `title` and `description`
 
-## Build
+### Build
 
 ```bash
-cd wiki-site && npm install && npm run docs:build
+cd wiki && npm install && npm run build
 ```
 
-Output goes to `wiki-site/.vitepress/dist/`.
+Output goes to `wiki/.vitepress/dist/`. For preview: `npm run preview`.
 
 ## Known Gotchas
 

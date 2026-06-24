@@ -2,6 +2,7 @@
 name: wiki-llms-txt
 description: Generates llms.txt and llms-full.txt files for LLM-friendly project documentation following the llms.txt specification. Use when the user wants to create LLM-readable summaries, llms.txt files, or make their wiki accessible to language models.
 license: MIT
+user-invocable: false
 metadata:
   author: Microsoft
   version: "1.0.0"
@@ -28,6 +29,16 @@ Before generating, resolve the source repository context:
    - Local → use relative paths only
 3. **Determine default branch**: Run `git rev-parse --abbrev-ref HEAD`
 4. **Do NOT proceed** until resolved
+
+## Gather Context
+
+Before generating, scan the repository and existing wiki to collect:
+
+1. **Project identity** — name, one-sentence description, primary language, key technologies
+2. **Wiki pages** — scan the `wiki/` directory for all generated `.md` files
+3. **Onboarding guides** — check for an `onboarding/` folder with audience-tailored guides
+4. **README** — extract the core project description
+5. **Key entry points** — main files, API surface, configuration
 
 ## llms.txt Format (Spec-Compliant)
 
@@ -127,3 +138,24 @@ Before finalizing:
 - [ ] "Optional" section only contains truly optional content
 - [ ] `llms.txt` is concise (1-5 KB)
 - [ ] `llms-full.txt` contains all wiki pages
+
+## Generation Report
+
+After generating, report a summary:
+
+```
+## llms.txt Generation Report
+
+- `./llms.txt` — Root discovery file, {N} sections, {M} linked pages
+- `wiki/llms.txt` — {N} sections, {M} linked pages, {size} KB
+- `wiki/llms-full.txt` — {N} sections, {M} inlined pages, {size} KB
+
+### Sections
+| Section | Pages | Notes |
+|---------|-------|-------|
+| Onboarding | 4 | All audience-tailored guides |
+| Architecture | 3 | Core architecture pages |
+| Getting Started | 2 | Setup and configuration |
+| Deep Dive | {N} | Component documentation |
+| Optional | {N} | Changelog, contributing |
+```

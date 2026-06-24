@@ -2,6 +2,7 @@
 name: wiki-onboarding
 description: Generates four audience-tailored onboarding guides in an onboarding/ folder — Contributor, Staff Engineer, Executive, and Product Manager. Use when the user wants onboarding documentation for a codebase.
 license: MIT
+user-invocable: false
 metadata:
   author: Microsoft
   version: "1.0.0"
@@ -64,6 +65,10 @@ Scan the repository for build files to determine the primary language for code e
 - `go.mod` → Go
 - `pom.xml` / `build.gradle` → Java
 
+Also pick a **comparison language** for cross-language explanations (C#/Java/Go/TypeScript → Python; Python → JavaScript; Rust → C++ or Go; Swift → TypeScript), and detect **key technologies** by scanning dependencies:
+- Orleans/Akka → Actor model; Cosmos/Mongo → Document DB; PostgreSQL/MySQL → RDBMS
+- Redis → Caching; Kafka/RabbitMQ/ServiceBus → Messaging; gRPC/GraphQL → API protocol; Docker/K8s → Containers
+
 ---
 
 ## Guide 1: Contributor Guide
@@ -77,6 +82,8 @@ Scan the repository for build files to determine the primary language for code e
 **Part I: Foundations** (skip if repo uses Python or JS)
 1. **{Primary Language} for Python/JS Engineers** — Syntax comparison tables, async model, collections, type system, package management. Concrete code side-by-side, NOT abstract descriptions.
 2. **{Primary Framework} Essentials** — Compare to equivalent Python/JS frameworks (e.g., FastAPI, Express). Request pipeline, routing, DI, config.
+3. **{Key Technology 1} from First Principles** — The problem it solves, core concepts with cross-language comparisons, how THIS system uses it.
+4. **{Key Technology 2} from First Principles** — Same approach for the second key technology.
 
 **Part II: This Codebase**
 3. **What This Project Does** — 2-3 sentence elevator pitch
@@ -130,7 +137,10 @@ Scan the repository for build files to determine the primary language for code e
 13. **Security Model** — Auth, authorization, trust boundaries, data sensitivity.
 14. **Testing Strategy** — What's tested, what isn't, testing philosophy.
 15. **Known Technical Debt** — Table: Issue, Risk Level, Affected Files, Source.
-16. **Where to Go Deep** — Recommended reading order of source files, links to wiki sections.
+16. **Component Types & Execution Paths** — Table: Component, Type, Execution Path, Key File, Source.
+17. **API Surface & Protocols** — Table: Method, Path, Handler, Auth, Source.
+18. **Configuration & Feature Flags** — Table: Key, Default, Description, Source.
+19. **Where to Go Deep** — Recommended reading order of source files, links to wiki sections.
 
 ### Rules
 - Use **pseudocode in a different language** to explain concepts

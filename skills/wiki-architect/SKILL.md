@@ -2,6 +2,7 @@
 name: wiki-architect
 description: Analyzes code repositories and generates hierarchical documentation structures with onboarding guides. Use when the user wants to create a wiki, generate documentation, map a codebase structure, or understand a project's architecture at a high level.
 license: MIT
+user-invocable: false
 metadata:
   author: Microsoft
   version: "1.0.0"
@@ -81,4 +82,34 @@ Detect primary language from file extensions and build files, then select a comp
 
 ## Output
 
-JSON code block following the catalogue schema with `items[].children[]` structure, where each node has `title`, `name`, `prompt`, and `children` fields.
+JSON code block following the catalogue schema with `items[].children[]` structure, where each node has `title`, `name`, `prompt`, and `children` fields:
+
+```json
+{
+  "items": [
+    {
+      "title": "getting-started",
+      "name": "[Derived from project]",
+      "prompt": "[Generation instruction]",
+      "children": [
+        {
+          "title": "[auto-derived]",
+          "name": "[Section Name]",
+          "prompt": "[1-3 sentence instruction with file citations]",
+          "children": []
+        }
+      ]
+    },
+    {
+      "title": "deep-dive",
+      "name": "[Derived from project]",
+      "prompt": "[Generation instruction]",
+      "children": []
+    }
+  ]
+}
+```
+
+Component analysis in Deep Dive prompts should cover classes, services, controllers, their dependencies, and design patterns (Repository, Factory, Strategy, Observer).
+
+**Catalogue-only mode:** when asked for only the structure/table of contents (e.g. via `/deep-wiki:catalogue`), output the JSON catalogue only and do not generate page content.

@@ -2,6 +2,7 @@
 name: wiki-ado-convert
 description: Converts VitePress/GFM wiki markdown to Azure DevOps Wiki-compatible format. Generates a Node.js build script that transforms Mermaid syntax, strips front matter, fixes links, and outputs ADO-compatible copies to dist/ado-wiki/.
 license: MIT
+user-invocable: false
 metadata:
   author: Microsoft
   version: "1.0.0"
@@ -24,6 +25,32 @@ Before generating the build script, resolve the source repository context:
 ## Why This Is Needed
 
 Azure DevOps Wikis use a markdown dialect that differs from GFM and VitePress in several critical ways. Documentation that renders perfectly in VitePress will have broken diagrams, raw front matter, dead links, and rendering issues when published as an ADO Wiki.
+
+## Pre-flight Scan
+
+Before generating the script, scan the wiki source directory for incompatibilities and report the counts:
+
+```bash
+# Count mermaid code fence blocks
+grep -rc '```mermaid' --include="*.md" wiki/ | grep -v ':0$'
+
+# Find flowchart keyword usage
+grep -rn '^\s*flowchart ' --include="*.md" wiki/
+
+# Find <br> tags in mermaid labels
+grep -rn '<br>' --include="*.md" wiki/ | head -20
+
+# Count YAML front matter files
+for f in $(find wiki/ -name "*.md"); do
+  head -1 "$f" | grep -q '^---$' && echo "FRONT MATTER: $f"
+done
+
+# Find parent-relative links
+grep -rn '](\.\./' --include="*.md" wiki/ | wc -l
+
+# Find VitePress container directives
+grep -rn '^:::' --include="*.md" wiki/ | grep -v mermaid
+```
 
 ## ADO Wiki Incompatibilities
 
@@ -222,6 +249,31 @@ The ADO Wiki's `index.md` **MUST be a proper wiki landing page**, NOT a generic 
    - Quick Navigation table (Section, Description columns linking to wiki sections)
    - Links to onboarding guides if they exist
 3. **NEVER leave a placeholder** — if `index.md` contains "TODO:", "Give a short introduction", or similar placeholder text, **replace it entirely**
+
+### Generated Index Template
+
+```markdown
+# [Project Name] — Wiki
+
+[1-2 sentence project description]
+
+## Quick Navigation
+
+| Section | Description |
+|---------|-------------|
+| [Onboarding Hub](./onboarding/index.md) | Guide selector for all audiences |
+| [Contributor Guide](./onboarding/contributor-guide.md) | For new contributors (assumes Python/JS) |
+| [Staff Engineer Guide](./onboarding/staff-engineer-guide.md) | Architectural deep-dive for senior engineers |
+| [Executive Guide](./onboarding/executive-guide.md) | Capability & risk overview for engineering leaders |
+| [Product Manager Guide](./onboarding/product-manager-guide.md) | Feature-focused guide for PMs |
+| [Getting Started](./01-getting-started/...) | Setup, installation, first steps |
+| [Architecture](./02-architecture/...) | System design and component overview |
+| ... | ... |
+
+## Wiki Contents
+
+- [Full table of contents with links to all pages]
+```
 
 ### ADO Wiki `.order` Files
 

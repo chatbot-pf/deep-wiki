@@ -2,6 +2,7 @@
 name: wiki-changelog
 description: Analyzes git commit history and generates structured changelogs categorized by change type. Use when the user asks about recent changes, wants a changelog, or needs to understand what changed in the repository.
 license: MIT
+user-invocable: false
 metadata:
   author: Microsoft
   version: "1.0.0"
@@ -32,6 +33,39 @@ Before generating any changelog, you MUST determine the source repository contex
 2. Group by time period: daily (last 7 days), weekly (older)
 3. Classify each commit: Features (🆕), Fixes (🐛), Refactoring (🔄), Docs (📝), Config (🔧), Dependencies (📦), Breaking (⚠️)
 4. Generate concise user-facing descriptions using project terminology
+
+## Categories
+
+| Emoji | Category | Signal Keywords |
+|-------|----------|----------------|
+| 🆕 | New Features | `feat`, `add`, `new`, `implement`, `introduce` |
+| 🐛 | Bug Fixes | `fix`, `bug`, `patch`, `resolve`, `hotfix` |
+| 🔄 | Refactoring | `refactor`, `restructure`, `reorganize`, `clean` |
+| 📝 | Documentation | `docs`, `readme`, `comment`, `jsdoc`, `docstring` |
+| 🔧 | Configuration | `config`, `env`, `setting`, `ci`, `build` |
+| 📦 | Dependencies | `deps`, `upgrade`, `bump`, `package`, `lock` |
+| ⚠️ | Breaking Changes | `breaking`, `BREAKING`, `migrate`, `deprecate` |
+
+## Output
+
+For each time period, output:
+
+```markdown
+## [Date or Date Range]
+
+**[Summary Title]**
+
+[1-2 sentence overview]
+
+### 🆕 New Features
+- [Change description]
+
+### 🐛 Bug Fixes
+- [Change description]
+
+### ⚠️ Breaking Changes
+- [Change description with migration notes]
+```
 
 ## Constraints
 

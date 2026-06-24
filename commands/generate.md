@@ -96,9 +96,9 @@ Scaffold a complete VitePress project in `wiki/` with:
 - Click-to-zoom for diagrams (custom SVG overlay with pan/zoom) and images (medium-zoom)
 - Dynamic sidebar from catalogue structure
 - Onboarding section first (uncollapsed)
-- **Proper `index.md` landing page** — Developer-focused, NOT a marketing page. No `hero:` frontmatter. Must contain: Quick Start with runnable commands, architecture overview diagram, documentation map table linking to all sections, key files table with source citations, and tech stack summary. See `/deep-wiki:build` for full template.
+- **Proper `index.md` landing page** — Developer-focused, NOT a marketing page. No `hero:` frontmatter. Must contain: Quick Start with runnable commands, architecture overview diagram, documentation map table linking to all sections, key files table with source citations, and tech stack summary. See the `wiki-vitepress` skill (`references/vitepress-build.md`) for the full template.
 
-See `/deep-wiki:build` for full VitePress packaging details.
+See the `wiki-vitepress` skill (and its `references/vitepress-build.md`) for full VitePress packaging details.
 
 ### Step 7: Generate AGENTS.md Files (Only If Missing)
 
@@ -116,7 +116,7 @@ Generate `AGENTS.md` files for pertinent repository folders. These files provide
 6. **Wiki AGENTS.md** (`wiki/AGENTS.md`) — Generate this for the wiki folder **only if it doesn't already exist** (same guard as all other AGENTS.md files). It must cover: VitePress build/dev/preview commands, wiki structure (sections, onboarding, llms.txt), content conventions (Mermaid dark-mode rules, citation format, frontmatter), and boundaries (don't delete generated pages, don't modify theme without testing). Reference `wiki/llms.txt` and `wiki/llms-full.txt` in the Documentation section.
 7. **Output a summary** listing which files were created, which were skipped (already exist), and which folders were not applicable.
 
-See `/deep-wiki:agents` for full AGENTS.md generation details.
+See the `wiki-agents-md` skill for full AGENTS.md generation details.
 
 ### Step 8: Generate llms.txt Files
 
@@ -128,7 +128,7 @@ Generate `llms.txt` files — LLM-friendly project summaries following the [llms
 4. **Section order**: Onboarding → Architecture → Getting Started → Deep Dive → Optional (changelog, contributing)
 5. **"Optional" H2** has special meaning — content there can be skipped for shorter context windows
 
-See `/deep-wiki:llms` for full llms.txt generation details.
+See the `wiki-llms-txt` skill for full llms.txt generation details.
 
 ## Mermaid Diagram Rules (ALL diagrams)
 

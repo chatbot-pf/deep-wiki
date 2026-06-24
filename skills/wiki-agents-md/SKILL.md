@@ -2,6 +2,7 @@
 name: wiki-agents-md
 description: Generates AGENTS.md files for repository folders — coding agent context files with build commands, testing instructions, code style, project structure, and boundaries. Only generates where AGENTS.md is missing.
 license: MIT
+user-invocable: false
 metadata:
   author: Microsoft
   version: "1.0.0"
@@ -352,6 +353,27 @@ Before beginning work in this repository, read `AGENTS.md` and follow all scoped
 This ensures Claude Code (and similar tools that look for `CLAUDE.md`) are redirected to the authoritative `AGENTS.md` instructions.
 
 **Same guard applies:** check if `CLAUDE.md` exists before writing. If it exists, skip it.
+
+## Generation Report
+
+After processing all folders, output a summary:
+
+```
+## AGENTS.md Generation Report
+
+### Created
+- `./AGENTS.md` — Root project instructions
+- `./CLAUDE.md` — Companion pointer to AGENTS.md
+- `tests/AGENTS.md` — Test harness instructions
+- `tests/CLAUDE.md` — Companion pointer to AGENTS.md
+
+### Skipped (already exist)
+- `src/AGENTS.md` — already exists
+- `src/CLAUDE.md` — already exists
+
+### Not applicable
+- `dist/` — generated output (skipped)
+```
 
 ## Quality Principles
 

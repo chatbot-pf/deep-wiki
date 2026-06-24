@@ -2,6 +2,7 @@
 name: wiki-page-writer
 description: Generates rich technical documentation pages with dark-mode Mermaid diagrams, source code citations, and first-principles depth. Use when writing documentation, generating wiki pages, creating technical deep-dives, or documenting specific components or systems.
 license: MIT
+user-invocable: false
 metadata:
   author: Microsoft
   version: "1.0.0"
@@ -43,6 +44,16 @@ Before generating any page, you MUST determine the source repository context:
 3. **Write**: Generate structured Markdown with diagrams and citations
 4. **Validate**: Verify file paths exist, class names are accurate, Mermaid renders correctly
 
+### Scope & Documentation Budget
+
+Scale the budget to the number of relevant files:
+
+| Scope | Files | Budget |
+|-------|-------|--------|
+| Small | ≤50 | ~2,000–3,000 words, 3 diagrams (2+ types) |
+| Medium | 50–300 | ~3,000–5,000 words, 4 diagrams (3+ types) |
+| Large/Complex | >300 | ~5,000–8,000+ words, 5–8 diagrams (4+ types); use tiered sampling — entry points, domain models, data access, integration edges |
+
 ## Mandatory Requirements
 
 ### VitePress Frontmatter
@@ -62,7 +73,16 @@ description: "One-line description"
 - Subgraph backgrounds: `#161b22`, borders `#30363d`, lines `#8b949e`
 - If using inline `style`, use dark fills with `,color:#e6edf3`
 - Do NOT use `<br/>` (use `<br>` or line breaks)
-- **Diagram selection**: structure → graph; behavior → sequence/state; data → ER; decisions → flowchart
+- **Diagram selection** — pick the type that fits the content:
+
+  | Type | Best For | When to Use |
+  |------|----------|-------------|
+  | `graph TB/LR` | Architecture, component relationships | Structural overviews, dependency graphs |
+  | `sequenceDiagram` | API flows, interactions (always `autonumber`) | Multi-step processes, request lifecycles |
+  | `classDiagram` | Class hierarchies, interfaces | Domain models, type relationships |
+  | `stateDiagram-v2` | State machines, lifecycle | Status transitions, workflow states |
+  | `erDiagram` | Database schema, entities | Data models, table relationships |
+  | `flowchart` | Data pipelines, decision trees | Conditional logic, error handling paths |
 
 ### Citations
 - Every non-trivial claim needs a citation with the resolved format:
@@ -104,3 +124,15 @@ description: "One-line description"
 - Escape bare generics outside code fences: `` `List<T>` `` not bare `List<T>`
 - No `<br/>` in Mermaid blocks
 - All hex colors must be 3 or 6 digits
+
+### Validation Checklist
+
+Before finalizing, verify:
+- [ ] Source repository context resolved (remote URL or confirmed local)
+- [ ] All file paths mentioned actually exist in the repo
+- [ ] All class/method names are accurate (not hallucinated)
+- [ ] All citations use the correct format (linked for remote, local otherwise)
+- [ ] Every Mermaid diagram has a `<!-- Sources: ... -->` comment block
+- [ ] Mermaid diagrams use dark-mode colors
+- [ ] No bare generics outside code fences
+- [ ] Every architectural claim has a file reference

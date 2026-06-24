@@ -2,6 +2,7 @@
 name: wiki-researcher
 description: Conducts multi-turn iterative deep research on specific topics within a codebase with zero tolerance for shallow analysis. Use when the user wants an in-depth investigation, needs to understand how something works across multiple files, or asks for comprehensive analysis of a specific system or pattern.
 license: MIT
+user-invocable: false
 metadata:
   author: Microsoft
   version: "1.0.0"
@@ -60,9 +61,30 @@ Each iteration takes a different lens and builds on all prior findings:
 2. **Data flow / State management view** — trace data through the system. Include `sequenceDiagram` and/or `stateDiagram-v2`.
 3. **Integration / Dependency view** — external connections, API contracts. Include dependency graph and integration table.
 4. **Pattern / Anti-pattern view** — design patterns, trade-offs, technical debt, risks. Use tables to catalogue patterns found.
-5. **Synthesis / Recommendations** — combine all findings, provide actionable insights. Include summary tables ranking findings by impact.
+5. **Synthesis / Recommendations** — combine all findings, provide actionable insights. Include summary tables ranking findings by impact. Give a clear mental model ("here's how to think about this" in 2-3 sentences), then "here's what that model hides" (nuances, edge cases, gotchas), and list key findings as numbered items with citations and confidence ratings.
 
 **Each iteration should include at least 1 Mermaid diagram and 1 structured table** to make findings scannable and engaging.
+
+### Running Knowledge Map
+
+Maintain this throughout all iterations, building on it each time (never repeat prior findings):
+
+```
+## Explored ✅
+- [component/area]: [1-line summary] — confidence: HIGH/MED/LOW
+
+## Partially Explored 🔶
+- [component/area]: [what we know, what's still unknown]
+
+## Unexplored ❓
+- [component/area]: [why it might matter]
+
+## Key Findings 🔍
+- [finding]: [1-line summary] — [risk/importance]
+
+## Open Questions ❔
+- [question]: [what we'd need to trace to answer it]
+```
 
 ### For Every Significant Finding
 

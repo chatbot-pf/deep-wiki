@@ -105,7 +105,7 @@ Create the full VitePress scaffolding in `wiki/`:
 - `wiki/.vitepress/theme/custom.css` — Full dark theme, Mermaid overrides, zoom CSS, focus mode CSS
 - `wiki/.vitepress/public/logo.svg` — Brand logo
 
-**Follow `/deep-wiki:build` for exact config, theme, and CSS specifications.** The key difference: do NOT run `npm install` or `npm run build` — just create the files. The GitHub Actions workflow will handle builds.
+**Follow the `wiki-vitepress` skill (`references/vitepress-build.md`) for exact config, theme, and CSS specifications.** The key difference: do NOT run `npm install` or `npm run build` — just create the files. The GitHub Actions workflow will handle builds.
 
 **Base path**: Check if this is a project site (needs `base: '/repo-name/'`) or user site (default `base: '/'`).
 
@@ -123,7 +123,7 @@ Create the full VitePress scaffolding in `wiki/`:
 - `wiki/llms-full.txt` — Full page content inlined in `<doc>` blocks
 - `wiki/.vitepress/public/llms.txt` — Served at `/llms.txt` on deployed site
 
-Follow `/deep-wiki:llms` and `/deep-wiki:agents` specs but keep content proportional to the crisp wiki size.
+Follow the `wiki-llms-txt` and `wiki-agents-md` skills but keep content proportional to the crisp wiki size.
 
 ### Step 7: Generate Deploy Workflow (only if missing)
 
