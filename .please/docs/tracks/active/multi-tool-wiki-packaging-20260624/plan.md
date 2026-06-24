@@ -52,7 +52,7 @@ flowchart TB
 
 - [x] T001 Define the adapter-manifest contract and core/adapter skill layout (file: skills/wiki-site-core/SKILL.md) (file: skills/wiki-site-core/references/adapter-contract.md)
   STOP: if the manifest fields can't express VitePress's base-path editing of config.mts declaratively, surface it before extraction — the contract shape changes.
-- [ ] T002 Extract the tool-independent core from vitepress-build.md into wiki-site-core references (post-processing, citations, palette/font tokens, sidebar+onboarding, llms.txt/AGENTS.md emission, landing page) (file: skills/wiki-site-core/references/core-packaging.md) (depends on T001)
+- [x] T002 Extract the tool-independent core from vitepress-build.md into wiki-site-core references (post-processing, citations, palette/font tokens, sidebar+onboarding, llms.txt/AGENTS.md emission, landing page) (file: skills/wiki-site-core/references/core-packaging.md) (depends on T001)
   STOP: if a "tool-independent" rule turns out to depend on VitePress specifics (e.g. the `<br/>`→`<br>` fix is markdown-it-only), classify it as a parser_profile concern in the adapter, not the core.
 - [ ] T003 Re-express VitePress as the reference adapter — vitepress manifest + VitePress-only delta (config.mts, theme/index.ts zoom+focus, custom.css, runtime Mermaid three-layer fix) (file: skills/wiki-site-core/references/adapters/vitepress.md) (depends on T002)
   STOP: VitePress smoke build must be behavior-identical to the pre-refactor baseline (FR-007); if any diff in theme, Mermaid, zoom, focus, or structure appears, stop and reconcile before continuing.
@@ -125,6 +125,7 @@ Test expectation: none — documentation. Verified by review: README and wiki-vi
 ## Progress
 
 - T001 ✅ — Authored `skills/wiki-site-core/SKILL.md` (core + adapter overview, reference map) and `references/adapter-contract.md` (manifest schema: install/build/output/node/mermaid_strategy/parser_profile/dark_mode/base_path/extra_files/capabilities; Mermaid strategies, parser profiles, base-path mechanisms, capability tiers, consumption rules, add-an-adapter guide). STOP check cleared — VitePress base-path expressed declaratively as `base_path.kind: config-edit`. Commit: T001.
+- T002 ✅ — Authored `references/core-packaging.md`: common output structure, design tokens (canonical palette/fonts), developer-focused landing page, plain-Markdown citations, sidebar+onboarding spec, llms.txt/AGENTS.md emission, and the profile-keyed post-processing catalog. STOP cleared — transforms gated by `parser_profile`/`mermaid_strategy` (e.g. `<br/>`→`<br>` = markdown-it; Mermaid inline-style fix = runtime), classified not duplicated. Note: VitePress mentions in the core are cross-ref pointers/boundary examples, not core logic. Commit: T002.
 
 ## Decision Log
 
