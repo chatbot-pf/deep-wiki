@@ -1,0 +1,23 @@
+.please/docs/tracks/active/multi-tool-wiki-packaging-20260624/plan.md
+  s_1c3d2151f563a4::t_7ba92399409ee5 132
+commands/deploy.md
+  s_1c3d2151f563a4::t_186fe5d2e956dd 78-80,82-83
+README.md
+  s_1c3d2151f563a4::t_2d794d9499886d 188
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.11",
+  "base_commit_sha": "6f3c760a6eeeae6c40f8fd9e6cd73cd4c6bdad1c",
+  "prompts": {},
+  "sessions": {
+    "s_1c3d2151f563a4": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "27e4161e-f4dc-490a-89cb-3e097c523fb6",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Minsu Lee <minsu.lee@passionfactory.ai>"
+    }
+  }
+}
