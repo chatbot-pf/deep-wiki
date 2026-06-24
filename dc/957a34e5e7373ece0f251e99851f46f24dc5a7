@@ -1,0 +1,24 @@
+commands/crisp.md
+  s_c89ea35ddb64d0::t_501ba00ddaf80a 108
+README.md
+  s_c89ea35ddb64d0::t_0a42ca4e1f1caf 200-202
+commands/generate.md
+  s_c89ea35ddb64d0::t_d558aaa86153dd 99
+  s_c89ea35ddb64d0::t_3aff7351954a71 101
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.11",
+  "base_commit_sha": "dc957a34e5e7373ece0f251e99851f46f24dc5a7",
+  "prompts": {},
+  "sessions": {
+    "s_c89ea35ddb64d0": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "e97f68d3-92bf-40ce-9416-fdeeaf29e2f6",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Minsu Lee <minsu.lee@passionfactory.ai>"
+    }
+  }
+}
