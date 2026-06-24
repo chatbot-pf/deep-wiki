@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ideation: Documentation tools beyond VitePress</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root {
+    --bg: #0d1117;
+    --surface: #161b22;
+    --surface-2: #1c2333;
+    --card: #2d333b;
+    --border: #30363d;
+    --text: #e6edf3;
+    --muted: #8b949e;
+    --accent: #6d5dfc;
+    --accent-soft: #6d5dfc1f;
+    --good: #3fb950;
+    --warn: #d29922;
+    --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --mono: 'JetBrains Mono', 'SF Mono', ui-monospace, Menlo, monospace;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font);
+    font-size: 16px;
+    line-height: 1.62;
+    font-feature-settings: "cv05", "ss01";
+  }
+  .page { max-width: 940px; margin-inline: auto; padding: 56px 24px 96px; }
+  .prose { max-width: 72ch; }
+  h1 { font-size: 2rem; line-height: 1.2; margin: 0 0 12px; letter-spacing: -0.02em; }
+  h2 { font-size: 1.4rem; margin: 56px 0 16px; letter-spacing: -0.01em; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+  h3 { font-size: 1.18rem; margin: 0 0 4px; letter-spacing: -0.01em; }
+  p { margin: 0 0 14px; }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  code { font-family: var(--mono); font-size: 0.86em; background: var(--accent-soft); color: #c9c2ff; padding: 1px 6px; border-radius: 5px; }
+  strong { color: inherit; font-weight: 600; }
+  .eyebrow { text-transform: uppercase; letter-spacing: 0.12em; font-size: 0.72rem; font-weight: 600; color: var(--accent); }
+  .lede { font-size: 1.08rem; color: #cdd6e0; }
+
+  .meta-head { display: flex; flex-wrap: wrap; gap: 8px 10px; margin: 18px 0 8px; }
+  .pill { display: inline-flex; align-items: center; gap: 6px; font-size: 0.78rem; font-weight: 500; padding: 4px 11px; border-radius: 999px; border: 1px solid var(--border); background: var(--surface); color: var(--muted); }
+  .pill b { color: var(--text); font-weight: 600; }
+
+  .grounding { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 4px 22px 8px; }
+  .grounding h4 { margin: 18px 0 6px; font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent); }
+  .grounding ul { margin: 0 0 8px; padding-left: 20px; }
+  .grounding li { margin: 3px 0; }
+
+  .axes { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
+  .axes li { display: flex; gap: 12px; align-items: baseline; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 12px 16px; }
+  .axes .ax-id { font-family: var(--mono); color: var(--accent); font-weight: 600; flex: none; }
+
+  .jump { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 18px; margin: 0 0 28px; }
+  .jump ol { margin: 6px 0 0; padding-left: 22px; }
+  .jump li { margin: 4px 0; }
+  .jump .j-meta { color: var(--muted); font-size: 0.86rem; }
+
+  article.idea { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 22px 24px 8px; margin: 0 0 22px; }
+  article.idea > header { display: flex; gap: 12px; align-items: baseline; margin-bottom: 12px; }
+  .idnum { font-family: var(--mono); font-weight: 600; color: var(--bg); background: var(--accent); border-radius: 7px; padding: 2px 9px; font-size: 0.92rem; flex: none; }
+  .idea dl.strip { display: grid; grid-template-columns: max-content 1fr; gap: 6px 16px; margin: 0 0 16px; padding: 14px 16px; background: var(--surface-2); border: 1px solid var(--border); border-radius: 10px; }
+  .idea dl.strip dt { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.07em; color: var(--muted); font-weight: 600; padding-top: 2px; }
+  .idea dl.strip dd { margin: 0; }
+  .basis-tag { font-family: var(--mono); font-size: 0.8rem; font-weight: 600; padding: 1px 7px; border-radius: 5px; }
+  .basis-direct { background: #3fb95022; color: #5fd97a; }
+  .basis-external { background: #6d5dfc22; color: #c9c2ff; }
+  .basis-reasoned { background: #d2992222; color: #e3b341; }
+  .idea h4 { margin: 16px 0 4px; font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.07em; color: var(--accent); }
+  .conf-bar { display: inline-block; width: 120px; height: 7px; background: var(--card); border-radius: 4px; vertical-align: middle; overflow: hidden; margin-right: 8px; }
+  .conf-bar > span { display: block; height: 100%; background: var(--accent); }
+  .cx { font-family: var(--mono); font-size: 0.82rem; }
+
+  figure { margin: 18px 0; padding: 16px; background: var(--bg); border: 1px solid var(--border); border-radius: 10px; overflow-x: auto; }
+  figure svg { display: block; margin: 0 auto; max-width: 100%; height: auto; }
+  figcaption { color: var(--muted); font-size: 0.84rem; margin-top: 10px; text-align: center; }
+  .svg-label { font-family: var(--font); font-size: 13px; fill: var(--text); }
+  .svg-small { font-family: var(--font); font-size: 11.5px; fill: var(--muted); }
+  .svg-mono { font-family: var(--mono); font-size: 11.5px; }
+
+  table { border-collapse: collapse; width: 100%; margin: 14px 0; font-size: 0.92rem; }
+  th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { font-size: 0.74rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
+  tr:last-child td { border-bottom: none; }
+  td.num { font-family: var(--mono); color: var(--muted); }
+
+  footer.composition-signal { margin-top: 64px; padding-top: 18px; border-top: 1px solid var(--border); color: var(--muted); font-size: 0.82rem; }
+  footer.composition-signal code { background: none; color: var(--muted); padding: 0; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <span class="eyebrow">Ideation · deep-wiki</span>
+  <h1>Documentation tools beyond VitePress</h1>
+  <p class="lede prose">Strong directions for letting the wiki packaging layer target generators other than VitePress — Docus, Fumadocs, and others — without forking the build for each one.</p>
+
+  <div class="meta-head">
+    <span class="pill">Date <b>2026-06-24</b></span>
+    <span class="pill">Topic <b>doc-site-tools</b></span>
+    <span class="pill">Focus <b>add Docus / Fumadocs (and others) to wiki packaging</b></span>
+    <span class="pill">Mode <b>repo-grounded</b></span>
+  </div>
+
+  <section>
+    <h2>Grounding Context</h2>
+    <div class="grounding prose">
+      <h4>Where VitePress is baked in</h4>
+      <ul>
+        <li><a href="https://github.com/chatbot-pf/deep-wiki/blob/main/skills/wiki-vitepress/SKILL.md"><code>skills/wiki-vitepress/SKILL.md</code></a> (overview) + <a href="https://github.com/chatbot-pf/deep-wiki/blob/main/skills/wiki-vitepress/references/vitepress-build.md"><code>references/vitepress-build.md</code></a> — ~650 lines of VitePress-specific <code>config.mts</code>, <code>theme/index.ts</code>, <code>custom.css</code>, <code>package.json</code>, and post-processing.</li>
+        <li><a href="https://github.com/chatbot-pf/deep-wiki/blob/main/commands/build.md"><code>commands/build.md</code></a> — thin entrypoint (<code>disable-model-invocation: true</code>) that delegates to the skill.</li>
+        <li><a href="https://github.com/chatbot-pf/deep-wiki/blob/main/commands/deploy.md"><code>commands/deploy.md</code></a> — generates a GitHub Actions workflow <em>hardcoded</em> to VitePress: <code>npm run build</code>, artifact path <code>wiki/.vitepress/dist</code>, VitePress base-path logic, Node 20.</li>
+      </ul>
+      <h4>Signature cross-cutting features (the expensive porting surface)</h4>
+      <ul>
+        <li>Dark-mode Mermaid "three-layer fix" (theme variables + CSS <code>!important</code> overrides + inline-style post-processing).</li>
+        <li>Click-to-zoom: a custom fullscreen SVG overlay — Mermaid renders <code>&lt;svg&gt;</code> not <code>&lt;img&gt;</code>, so it polls async SVGs, clones, fixes <code>viewBox</code>, pans/zooms, and cleans up listeners. The most bug-prone code in the skill.</li>
+        <li>Focus mode toggle, source-linked citations, canonical dark palette + Inter/JetBrains Mono, dynamic sidebar from numbered section folders, onboarding-first, <code>llms.txt</code>/<code>AGENTS.md</code> emission.</li>
+        <li>Markdown post-processing: <code>&lt;br/&gt;</code>→<code>&lt;br&gt;</code>, wrap bare <code>&lt;T&gt;</code> generics in backticks, validate Mermaid hex, ensure frontmatter.</li>
+      </ul>
+      <h4>External context — the 2026 tool landscape</h4>
+      <ul>
+        <li><strong>Docus</strong> (Nuxt 4 / Vue, Nuxt Content / MDC): <em>no</em> built-in Mermaid (SSR-sensitive; needs <code>&lt;ClientOnly&gt;</code> or custom remark); built-in dark mode; static export <code>nuxt build --preset github_pages</code> → <code>.output/public</code>, base via <code>NUXT_APP_BASE_URL</code>; MDC <code>---</code> delimiter can misparse plain markdown. <strong>Highest porting friction.</strong></li>
+        <li><strong>Fumadocs</strong> (Next.js / React; MDX or <code>.md</code> via local-md): Mermaid documented but not built-in (~50-line client component; clean dark via <code>useTheme()</code>); export <code>next build</code> (output:export) → <code>out/</code> + <code>.nojekyll</code>; Node 22+; <strong>MDX chokes on bare <code>&lt;T&gt;</code> generics</strong> — use <code>.md</code> mode. Moderate effort.</li>
+        <li><strong>Other strong contenders:</strong> <strong>Nextra v4</strong> — built-in Mermaid (<code>@theguild/remark-mermaid</code>); <strong>Docusaurus</strong> — <em>build-time</em> Mermaid pre-render → dual light/dark SVG, zero JS, instant switch, largest community; <strong>Starlight</strong> (Astro) — lightest but Mermaid is its #2 missing feature; <strong>rspress</strong>, <strong>Mintlify</strong> (hosted) round out the field.</li>
+        <li><strong>Burden ranking</strong> for deep-wiki's needs: Nextra v4 &lt; Fumadocs &lt; Docus. <strong>Key reframe:</strong> build-time Mermaid (Docusaurus, Nextra) natively does what VitePress needed ~300 lines of custom code for — and gives instant dark/light for free.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <h2>Topic Axes</h2>
+    <ul class="axes">
+      <li><span class="ax-id">A1</span><span><strong>Tool abstraction &amp; skill architecture</strong> — separate skills per tool vs one parametrized skill vs shared-core + per-tool adapters.</span></li>
+      <li><span class="ax-id">A2</span><span><strong>Cross-cutting feature parity</strong> — porting dark Mermaid, SVG click-zoom, focus mode, and citations per tool.</span></li>
+      <li><span class="ax-id">A3</span><span><strong>Content / Markdown portability</strong> — markdown-it vs MDX (JSX / <code>&lt;T&gt;</code> breakage) vs MDC; the post-processing layer.</span></li>
+      <li><span class="ax-id">A4</span><span><strong>Tool selection &amp; invocation UX</strong> — how <code>build.md</code> / <code>deploy.md</code> pick and stay aware of the chosen tool.</span></li>
+      <li><span class="ax-id">A5</span><span><strong>Maintenance, parity testing &amp; contribution model</strong> — keeping N tools in sync, smoke-testing builds, version pinning.</span></li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Ranked Ideas</h2>
+    <div class="jump">
+      <strong>Jump to:</strong>
+      <ol>
+        <li><a href="#idea1">Shared core skill + declarative adapter contract</a> <span class="j-meta">· A1 · Conf 90 · Cx High</span></li>
+        <li><a href="#idea2">Capability-gated Mermaid strategy slot</a> <span class="j-meta">· A2 · Conf 85 · Cx Med</span></li>
+        <li><a href="#idea3">Target-aware Markdown normalizer</a> <span class="j-meta">· A3 · Conf 80 · Cx Med</span></li>
+        <li><a href="#idea4">Auto-detect + recommend tool selection</a> <span class="j-meta">· A4 · Conf 75 · Cx Med</span></li>
+        <li><a href="#idea5">Golden-fixture parity harness</a> <span class="j-meta">· A5 · Conf 72 · Cx Med</span></li>
+        <li><a href="#idea6">No-build zero-dependency preview tier</a> <span class="j-meta">· A1 · Conf 60 · Cx Med</span></li>
+      </ol>
+    </div>
+
+    <!-- IDEA 1 -->
+    <article class="idea" id="idea1">
+      <header><span class="idnum">1.</span><h3>Shared core skill + declarative adapter contract</h3></header>
+      <dl class="strip">
+        <dt>Axis</dt><dd>A1 · Tool abstraction &amp; skill architecture</dd>
+        <dt>Basis</dt><dd><span class="basis-tag basis-direct">direct:</span> <code>references/vitepress-build.md</code> is ~650 monolithic, tool-coupled lines, yet <code>SKILL.md</code> already separates a tool-agnostic overview from the authoritative reference; <code>deploy.md</code> hardcodes <code>npm run build</code> + <code>wiki/.vitepress/dist</code>. The palette table, post-processing rules, citations, sidebar, and "developer-focused landing page" are content concerns independent of any tool. <span class="basis-tag basis-external">external:</span> the per-tool facts a manifest must encode (Docus → <code>.output/public</code>/<code>NUXT_APP_BASE_URL</code>; Fumadocs → <code>out/</code>+<code>.nojekyll</code>+Node 22).</dd>
+        <dt>Confidence</dt><dd><span class="conf-bar"><span style="width:90%"></span></span>90%</dd>
+        <dt>Complexity</dt><dd class="cx">High</dd>
+      </dl>
+      <h4>Description</h4>
+      <p>Split <code>wiki-vitepress</code> into a generator-neutral <strong>core</strong> (e.g. <code>wiki-site-core</code>) holding the genuinely portable logic — Markdown post-processing, source-linked citations, the canonical dark palette and fonts <em>as design tokens</em>, dynamic sidebar + onboarding-first, <code>llms.txt</code>/<code>AGENTS.md</code> emission, the landing page — plus a thin per-tool <strong>adapter</strong>. Each adapter is a small declarative <strong>capability manifest</strong>: <code>build_cmd</code>, <code>install_cmd</code>, <code>output_dir</code>, <code>mermaid_strategy</code>, <code>dark_mode</code>, <code>node_version</code>, <code>base_path_mechanism</code>, <code>parser_profile</code>, and <code>extra_files</code> (e.g. <code>.nojekyll</code>) — read identically by <code>build.md</code>, <code>deploy.md</code>, and CI. VitePress is refactored to be the <em>reference adapter</em>, not a privileged substrate, which proves the contract isn't VitePress-shaped. The same contract doubles as the community contribution unit.</p>
+      <figure>
+        <svg viewBox="0 0 720 220" role="img" aria-label="Before: one monolithic VitePress skill. After: a shared core consumed by thin per-tool adapter manifests.">
+          <text x="150" y="22" text-anchor="middle" class="svg-small" style="fill:#8b949e">BEFORE</text>
+          <rect x="70" y="36" width="160" height="150" rx="9" fill="#2d333b" stroke="#6d5dfc"/>
+          <text x="150" y="104" text-anchor="middle" class="svg-label" style="font-weight:600">wiki-vitepress</text>
+          <text x="150" y="124" text-anchor="middle" class="svg-small">~650 lines,</text>
+          <text x="150" y="140" text-anchor="middle" class="svg-small">VitePress-coupled</text>
+
+          <line x1="250" y1="111" x2="320" y2="111" stroke="#8b949e" stroke-width="1.5" marker-end="url(#ar1)"/>
+          <defs><marker id="ar1" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#8b949e"/></marker></defs>
+
+          <text x="540" y="22" text-anchor="middle" class="svg-small" style="fill:#8b949e">AFTER</text>
+          <rect x="430" y="36" width="220" height="46" rx="9" fill="#1c2333" stroke="#6d5dfc"/>
+          <text x="540" y="58" text-anchor="middle" class="svg-label" style="font-weight:600">wiki-site-core</text>
+          <text x="540" y="74" text-anchor="middle" class="svg-small">post-processing · citations · tokens · sidebar · llms.txt</text>
+
+          <g>
+            <rect x="346" y="128" width="118" height="58" rx="8" fill="#2d333b" stroke="#6d5dfc"/>
+            <text x="405" y="153" text-anchor="middle" class="svg-mono" style="fill:#c9c2ff">vitepress*</text>
+            <text x="405" y="170" text-anchor="middle" class="svg-small">reference</text>
+            <rect x="481" y="128" width="118" height="58" rx="8" fill="#2d333b" stroke="#30363d"/>
+            <text x="540" y="153" text-anchor="middle" class="svg-mono" style="fill:#e6edf3">docus</text>
+            <text x="540" y="170" text-anchor="middle" class="svg-small">manifest</text>
+            <rect x="616" y="128" width="80" height="58" rx="8" fill="#2d333b" stroke="#30363d"/>
+            <text x="656" y="153" text-anchor="middle" class="svg-mono" style="fill:#e6edf3">fuma…</text>
+            <text x="656" y="170" text-anchor="middle" class="svg-small">manifest</text>
+          </g>
+          <line x1="405" y1="128" x2="470" y2="82" stroke="#8b949e" stroke-width="1.2"/>
+          <line x1="540" y1="128" x2="540" y2="82" stroke="#8b949e" stroke-width="1.2"/>
+          <line x1="656" y1="128" x2="600" y2="82" stroke="#8b949e" stroke-width="1.2"/>
+        </svg>
+        <figcaption>One engine + N small descriptors replaces N forks of a 650-line reference.</figcaption>
+      </figure>
+      <h4>Rationale</h4>
+      <p>This is the keystone every other idea rests on. It converts "support N tools" from N copies of a 650-line reference into <strong>1 engine + N small descriptors</strong>, so each cross-cutting bugfix or palette change lands once and propagates to every site. Making VitePress <em>implement</em> the contract rather than be exempt from it is the discipline that stops the abstraction from leaking VitePress assumptions.</p>
+      <h4>Downsides</h4>
+      <p>Large up-front refactor with no immediate user-visible payoff; the manifest schema must be designed and versioned; if VitePress isn't honestly re-expressed as an adapter, the "neutral" core will quietly encode its quirks. Best sequenced as the first move precisely because everything else plugs into it.</p>
+    </article>
+
+    <!-- IDEA 2 -->
+    <article class="idea" id="idea2">
+      <header><span class="idnum">2.</span><h3>Capability-gated Mermaid strategy slot</h3></header>
+      <dl class="strip">
+        <dt>Axis</dt><dd>A2 · Cross-cutting feature parity</dd>
+        <dt>Basis</dt><dd><span class="basis-tag basis-direct">direct:</span> <code>SKILL.md</code> "Known Gotchas" name this the worst part — <em>"Mermaid renders async — SVGs don't exist when <code>onMounted</code> fires. Must poll"</em> and <em>"Node text in Mermaid uses inline <code>style</code> with highest specificity — CSS alone won't fix it."</em> <span class="basis-tag basis-external">external:</span> Docusaurus pre-renders Mermaid to dual light/dark SVG with zero JS and instant switch; Nextra v4 ships built-in Mermaid — both natively do what VitePress needed ~300 lines for.</dd>
+        <dt>Confidence</dt><dd><span class="conf-bar"><span style="width:85%"></span></span>85%</dd>
+        <dt>Complexity</dt><dd class="cx">Medium</dd>
+      </dl>
+      <h4>Description</h4>
+      <p>Treat "how a tool renders dark Mermaid" as one named <strong>strategy slot</strong> with three reusable implementations the adapter chooses between: <code>native</code> (Nextra's built-in remark plugin — zero work), <code>build-time</code> (Docusaurus-style dual light/dark SVG pre-render, e.g. via <code>@mermaid-js/mermaid-cli</code>), and <code>runtime-overlay</code> (VitePress's existing async-poll + clone + <code>viewBox</code> + pan/zoom + dark-CSS code, generalized). Make <code>build-time</code> the default contract for new tools and demote <code>runtime-overlay</code> to a VitePress legacy fallback. The packager emits the heavy ~300-line client stack <em>only</em> when the chosen adapter declares <code>runtime-overlay</code>.</p>
+      <figure>
+        <svg viewBox="0 0 720 196" role="img" aria-label="A mermaid_strategy slot routing to three implementations: native, build-time (default), and runtime-overlay.">
+          <rect x="40" y="78" width="150" height="46" rx="9" fill="#1c2333" stroke="#6d5dfc"/>
+          <text x="115" y="100" text-anchor="middle" class="svg-mono" style="fill:#c9c2ff">mermaid_strategy</text>
+          <text x="115" y="116" text-anchor="middle" class="svg-small">declared per adapter</text>
+
+          <line x1="190" y1="92" x2="250" y2="44" stroke="#8b949e" stroke-width="1.3"/>
+          <line x1="190" y1="101" x2="250" y2="101" stroke="#6d5dfc" stroke-width="2"/>
+          <line x1="190" y1="110" x2="250" y2="158" stroke="#8b949e" stroke-width="1.3"/>
+
+          <rect x="252" y="22" width="430" height="44" rx="8" fill="#2d333b" stroke="#30363d"/>
+          <text x="268" y="40" class="svg-label"><tspan class="svg-mono" style="fill:#5fd97a">native</tspan>  → Nextra v4</text>
+          <text x="268" y="57" class="svg-small">0 lines · built-in remark plugin</text>
+
+          <rect x="252" y="79" width="430" height="44" rx="8" fill="#2d333b" stroke="#6d5dfc"/>
+          <text x="268" y="97" class="svg-label"><tspan class="svg-mono" style="fill:#c9c2ff">build-time</tspan>  → Docusaurus  ·  DEFAULT</text>
+          <text x="268" y="114" class="svg-small">dual light/dark SVG · zero JS · instant switch</text>
+
+          <rect x="252" y="136" width="430" height="44" rx="8" fill="#2d333b" stroke="#30363d"/>
+          <text x="268" y="154" class="svg-label"><tspan class="svg-mono" style="fill:#e3b341">runtime-overlay</tspan>  → VitePress (legacy)</text>
+          <text x="268" y="171" class="svg-small">~300 lines · async poll · dark-CSS · listener cleanup</text>
+        </svg>
+        <figcaption>The hardest porting surface is solved at most twice — and is <em>absent</em> on build-time tools.</figcaption>
+      </figure>
+      <h4>Rationale</h4>
+      <p>The single most bug-prone subsystem in the whole product is the one several target tools make <em>unnecessary</em>. This inverts the intuition that VitePress is "easiest": on a build-time tool the feature ships with <em>less</em> code, not more, and the fragile async-timing/listener-leak surface leaves maintenance entirely for those tools. A tool that later gains native Mermaid switches strategy in one line.</p>
+      <h4>Downsides</h4>
+      <p>Build-time pre-render needs dual SVGs emitted to keep instant theme switching (more build artifacts); click-to-zoom is a separate concern that may still want a small vanilla overlay even over pre-rendered SVG; two strategies (build-time + runtime-overlay) still must be maintained for the tools that need each.</p>
+    </article>
+
+    <!-- IDEA 3 -->
+    <article class="idea" id="idea3">
+      <header><span class="idnum">3.</span><h3>Target-aware Markdown normalizer</h3></header>
+      <dl class="strip">
+        <dt>Axis</dt><dd>A3 · Content / Markdown portability</dd>
+        <dt>Basis</dt><dd><span class="basis-tag basis-direct">direct:</span> current post-processing already "wraps bare <code>&lt;T&gt;</code> generic parameters in backticks outside code fences" and "replaces <code>&lt;br/&gt;</code> with <code>&lt;br&gt;</code> (Vue template compiler compatibility)" — both already flavor-specific. <span class="basis-tag basis-external">external:</span> Fumadocs MDX chokes on bare <code>&lt;T&gt;</code> in prose (use <code>.md</code> mode or escape); Docus MDC's <code>---</code> delimiter can misparse plain markdown (nuxt/content#1260).</dd>
+        <dt>Confidence</dt><dd><span class="conf-bar"><span style="width:80%"></span></span>80%</dd>
+        <dt>Complexity</dt><dd class="cx">Medium</dd>
+      </dl>
+      <h4>Description</h4>
+      <p>Generalize today's VitePress-only post-processing into a flavor-aware normalizer keyed by the adapter's <code>parser_profile</code>. One canonical wiki document is generated tool-neutral; a single normalization seam then applies exactly the transforms the chosen target needs: <code>markdown-it</code> (VitePress — <code>&lt;br/&gt;</code>→<code>&lt;br&gt;</code>); <code>mdx</code> (Fumadocs/Nextra — escape bare <code>&lt;T&gt;</code> generics the JSX parser treats as elements, and prefer emitting <code>.md</code> over <code>.mdx</code> so local-md skips JSX parsing entirely); <code>mdc</code> (Docus — guard the <code>---</code> props/slot delimiter from being read as a horizontal rule).</p>
+      <figure>
+        <svg viewBox="0 0 720 150" role="img" aria-label="One canonical wiki doc lowered through three parser-profile passes to markdown-it, MDX, and MDC targets.">
+          <rect x="40" y="52" width="150" height="46" rx="9" fill="#1c2333" stroke="#6d5dfc"/>
+          <text x="115" y="74" text-anchor="middle" class="svg-label" style="font-weight:600">canonical doc</text>
+          <text x="115" y="90" text-anchor="middle" class="svg-small">generated once</text>
+          <line x1="190" y1="65" x2="300" y2="30" stroke="#8b949e" stroke-width="1.3" marker-end="url(#ar3)"/>
+          <line x1="190" y1="75" x2="300" y2="75" stroke="#8b949e" stroke-width="1.3" marker-end="url(#ar3)"/>
+          <line x1="190" y1="85" x2="300" y2="120" stroke="#8b949e" stroke-width="1.3" marker-end="url(#ar3)"/>
+          <defs><marker id="ar3" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#8b949e"/></marker></defs>
+          <rect x="306" y="12" width="380" height="36" rx="7" fill="#2d333b" stroke="#30363d"/>
+          <text x="320" y="34" class="svg-label"><tspan class="svg-mono" style="fill:#c9c2ff">markdown-it</tspan>  →  VitePress  ·  <tspan class="svg-small">&lt;br/&gt;→&lt;br&gt;</tspan></text>
+          <rect x="306" y="57" width="380" height="36" rx="7" fill="#2d333b" stroke="#30363d"/>
+          <text x="320" y="79" class="svg-label"><tspan class="svg-mono" style="fill:#c9c2ff">mdx (.md)</tspan>  →  Fumadocs/Nextra  ·  <tspan class="svg-small">escape &lt;T&gt;</tspan></text>
+          <rect x="306" y="102" width="380" height="36" rx="7" fill="#2d333b" stroke="#30363d"/>
+          <text x="320" y="124" class="svg-label"><tspan class="svg-mono" style="fill:#c9c2ff">mdc</tspan>  →  Docus  ·  <tspan class="svg-small">guard --- delimiter</tspan></text>
+        </svg>
+        <figcaption>Portability lives in one declarative seam, not scattered per-tool patches.</figcaption>
+      </figure>
+      <h4>Rationale</h4>
+      <p>Markdown portability is where <em>silent</em> breakage lives — a page with <code>Map&lt;string, T&gt;</code> and a stray <code>---</code> must build cleanly on markdown-it, MDX, and MDC from identical source, without the wiki author knowing the difference. Centralizing transforms as per-profile lowering passes means a new tool declares its escaping rules once instead of editing a shared monolith, and "try it in Fumadocs" becomes a re-package rather than a re-run of the expensive generation pipeline.</p>
+      <h4>Downsides</h4>
+      <p>Requires enumerating each parser's failure modes accurately — a moving target as the tools evolve; emitting <code>.md</code> to dodge MDX limits forfeits MDX component power; some breakage classes (raw HTML passthrough) may need per-tool config beyond text transforms.</p>
+    </article>
+
+    <!-- IDEA 4 -->
+    <article class="idea" id="idea4">
+      <header><span class="idnum">4.</span><h3>Auto-detect + recommend tool selection</h3></header>
+      <dl class="strip">
+        <dt>Axis</dt><dd>A4 · Tool selection &amp; invocation UX</dd>
+        <dt>Basis</dt><dd><span class="basis-tag basis-direct">direct:</span> <code>build.md</code> is a thin <code>disable-model-invocation: true</code> entrypoint passing <code>$ARGUMENTS</code> — the natural seam for a <code>--tool</code> flag; <code>deploy.md</code> Step 1 already keys prerequisites to <code>wiki/package.json</code>. <span class="basis-tag basis-external">external:</span> the burden ranking (Nextra v4 &lt; Fumadocs &lt; Docus) and content-discriminating facts (Fumadocs MDX vs Mermaid-heavy, generic-laden content) give a principled default. <span class="basis-tag basis-reasoned">reasoned:</span> each framework marks its presence on disk (<code>next.config</code>, <code>nuxt.config</code>, <code>.vitepress/</code>), so detection is inference from existing signals.</dd>
+        <dt>Confidence</dt><dd><span class="conf-bar"><span style="width:75%"></span></span>75%</dd>
+        <dt>Complexity</dt><dd class="cx">Medium</dd>
+      </dl>
+      <h4>Description</h4>
+      <p>Rather than make the user name a generator, <code>/deep-wiki:build</code> resolves the target once via <strong>arg &gt; config &gt; auto-detect &gt; default</strong>. It sniffs repo signals (<code>.vitepress/</code> → VitePress, <code>nuxt.config</code> + <code>@nuxt/content</code> → Docus, <code>next.config</code> + <code>fumadocs-*</code> → Fumadocs) <em>and</em> the wiki's own content (Mermaid-heavy + bare <code>&lt;T&gt;</code> generics → recommend a build-time-Mermaid tool over Fumadocs MDX), proposes a default by burden ranking with one line of reasoning, and accepts <code>--tool=fumadocs</code> to override. VitePress stays the zero-config default so existing users see no change, and <code>deploy.md</code> reads the same resolved target so the Actions workflow's build command, output dir, Node version, and <code>.nojekyll</code> follow automatically.</p>
+      <h4>Rationale</h4>
+      <p>Most users won't know which generator fits Mermaid-heavy, citation-dense wiki content; auto-detect plus content-aware recommendation turns a research decision into a zero-friction default with an escape hatch, and keeps <code>/build</code> a single command instead of spawning one command per tool. Matching the wiki's framework to the host repo's framework is the choice a user would make anyway.</p>
+      <h4>Downsides</h4>
+      <p>Detection heuristics can mis-fire (a repo carrying both Next and Nuxt deps); the content-aware recommendation needs the wiki already generated to inspect; a wrong <em>silent</em> default is worse than a prompt, so genuine ambiguity should trigger a confirmation rather than a guess.</p>
+    </article>
+
+    <!-- IDEA 5 -->
+    <article class="idea" id="idea5">
+      <header><span class="idnum">5.</span><h3>Golden-fixture parity harness</h3></header>
+      <dl class="strip">
+        <dt>Axis</dt><dd>A5 · Maintenance, parity testing &amp; contribution model</dd>
+        <dt>Basis</dt><dd><span class="basis-tag basis-direct">direct:</span> <code>SKILL.md</code> "Known Gotchas" (async Mermaid, inline-style specificity, SSR <code>document</code>) enumerate exactly the failure modes worth asserting. <span class="basis-tag basis-reasoned">reasoned:</span> supporting 3–5 independently-versioned ecosystems means that without a smoke build, the first signal of breakage is a user's failed deploy; a shared fixture exercising the exact pain points is the minimum viable regression net.</dd>
+        <dt>Confidence</dt><dd><span class="conf-bar"><span style="width:72%"></span></span>72%</dd>
+        <dt>Complexity</dt><dd class="cx">Medium</dd>
+      </dl>
+      <h4>Description</h4>
+      <p>Ship one canonical fixture wiki exercising every signature feature — a dark Mermaid diagram, a bare <code>&lt;T&gt;</code> generic, a source citation, an onboarding page, a stray <code>---</code>, a <code>&lt;br/&gt;</code> — and build it through every adapter in a CI matrix, asserting invariants per tool: non-empty dist, Mermaid renders with the canonical dark palette, citations resolve, the normalizer survived, and the declared zoom/focus tier holds. An adapter isn't "supported" until green. Each adapter <strong>pins the upstream tool version</strong> it was validated against (Fumadocs Node 22+, VitePress 1.x / Node 20), so an upstream breaking release fails CI loudly instead of a user's deploy silently.</p>
+      <table>
+        <thead><tr><th>Invariant</th><th>VitePress</th><th>Docusaurus</th><th>Fumadocs</th><th>Docus</th></tr></thead>
+        <tbody>
+          <tr><td>Mermaid renders (dark)</td><td>runtime</td><td>build-time</td><td>plugin</td><td>ClientOnly</td></tr>
+          <tr><td><code>&lt;T&gt;</code> survives</td><td>✓</td><td>✓</td><td>via <code>.md</code></td><td>✓</td></tr>
+          <tr><td>Citations resolve</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td></tr>
+          <tr><td>Zoom / focus tier</td><td>full</td><td>zoom only</td><td>declared</td><td>declared</td></tr>
+        </tbody>
+      </table>
+      <h4>Rationale</h4>
+      <p>The cost of multi-tool support isn't writing adapters — it's keeping them green as several upstreams move. A fixture + matrix converts "did we port everything?" and "does tool X still work?" from manual audits into red/green gates, and hands contributors a clear, automated bar to clear when adding a generator.</p>
+      <h4>Downsides</h4>
+      <p>CI cost and time scale with tool count; headless screenshot-diffing is itself flaky and maintenance-heavy (a DOM/asset-presence assertion may be a saner first cut than pixel diffing); version pinning invites staleness without a refresh cadence.</p>
+    </article>
+
+    <!-- IDEA 6 -->
+    <article class="idea" id="idea6">
+      <header><span class="idnum">6.</span><h3>No-build zero-dependency preview tier <span style="font-weight:400;color:var(--muted);font-size:0.85rem">· wildcard</span></h3></header>
+      <dl class="strip">
+        <dt>Axis</dt><dd>A1 · Tool abstraction &amp; skill architecture</dd>
+        <dt>Basis</dt><dd><span class="basis-tag basis-direct">direct:</span> the packaging layer assumes the output is a JS-framework SSG built with <code>npm install</code> + a bundler, yet the wiki content is just Markdown + Mermaid. <span class="basis-tag basis-reasoned">reasoned:</span> the heaviest, flakiest, slowest part of build/deploy is <code>node_modules</code> + bundler; for the common "I just want to read it" case that cost buys nothing, and a single HTML file widens deploy targets beyond CI-with-Node.</dd>
+        <dt>Confidence</dt><dd><span class="conf-bar"><span style="width:60%"></span></span>60%</dd>
+        <dt>Complexity</dt><dd class="cx">Medium</dd>
+      </dl>
+      <h4>Description</h4>
+      <p>Challenge the buried assumption that wiki output <em>must</em> be a bundler-built JS-framework SSG. The wiki is just Markdown + Mermaid — so offer a zero-dependency tier: a self-contained <code>index.html</code> that loads markdown-it + Mermaid from a pinned CDN (or inlined), or a node-less SSG like mdBook / zola with no <code>node_modules</code>. This becomes the instant-preview / air-gapped / CI-cheap "read it now" default, with VitePress / Docus / Fumadocs as the polished "rich" tier.</p>
+      <figure>
+        <svg viewBox="0 0 720 120" role="img" aria-label="Two tiers contrasted: a no-build single-file tier and a rich SSG tier.">
+          <rect x="40" y="22" width="310" height="76" rx="10" fill="#1c2333" stroke="#6d5dfc"/>
+          <text x="58" y="48" class="svg-label" style="font-weight:600">No-build tier</text>
+          <text x="58" y="68" class="svg-small">1 file · 0 node_modules · markdown-it + Mermaid via CDN</text>
+          <text x="58" y="85" class="svg-small">instant preview · air-gapped · CI-cheap</text>
+          <rect x="370" y="22" width="310" height="76" rx="10" fill="#2d333b" stroke="#30363d"/>
+          <text x="388" y="48" class="svg-label" style="font-weight:600">Rich tier</text>
+          <text x="388" y="68" class="svg-small">VitePress · Docus · Fumadocs · Nextra</text>
+          <text x="388" y="85" class="svg-small">npm install · bundler · full search &amp; theming</text>
+        </svg>
+        <figcaption>Most porting pain is incidental to choosing heavyweight SSGs; a no-build tier sidesteps it for reads.</figcaption>
+      </figure>
+      <h4>Rationale</h4>
+      <p>Reframes the problem one level up: much of the porting pain is incidental to choosing heavyweight SSGs at all. A no-build tier sidesteps it entirely for previews and constrained environments — and including a non-SSG target stress-tests whether the core abstraction (idea&nbsp;1) is genuinely generator-neutral or secretly SSG-shaped.</p>
+      <h4>Downsides</h4>
+      <p>A single-file / CDN site loses built-in search, sidebar polish, and offline assets unless carefully inlined; a CDN dependency reintroduces a network requirement; it is a different output shape the parity harness must accommodate; and it risks scope creep beyond the user's "Docus / Fumadocs" framing — best treated as an opt-in tier, not the headline.</p>
+    </article>
+  </section>
+
+  <section>
+    <h2>Rejection Summary</h2>
+    <table>
+      <thead><tr><th class="num">#</th><th>Idea</th><th>Reason</th></tr></thead>
+      <tbody>
+        <tr><td class="num">1</td><td>Capability tiers / graceful degradation (standalone)</td><td>Folded into #2 (strategy slot reports tier) and #5 (declared in the matrix).</td></tr>
+        <tr><td class="num">2</td><td>Design tokens / Style-Dictionary palette compilation</td><td>Folded into #1 — palette &amp; fonts as tokens are part of the shared core.</td></tr>
+        <tr><td class="num">3</td><td>Content-driven recommendation matrix (standalone)</td><td>Folded into #4 as the content-aware half of auto-detect.</td></tr>
+        <tr><td class="num">4</td><td>Pandoc-style canonical AST + per-writer lowering</td><td>Same mechanism as #3; the lighter normalizer framing kept instead.</td></tr>
+        <tr><td class="num">5</td><td>Adapter contribution template + authoring guide</td><td>Folded into #1 — the adapter contract <em>is</em> the contribution unit.</td></tr>
+        <tr><td class="num">6</td><td>Scheduled upstream-drift re-validation job</td><td>Version pinning kept in #5; the cron + auto-issue machinery is too much for current plugin scale.</td></tr>
+        <tr><td class="num">7</td><td>Parametrized deploy workflow (standalone)</td><td>Folded into #1 (manifest read by deploy) and #4 (resolved target flows to deploy).</td></tr>
+        <tr><td class="num">8</td><td>VS Code "contribution points" slot framing</td><td>Duplicate of #1's adapter contract at a more abstract altitude.</td></tr>
+        <tr><td class="num">9</td><td>LiteLLM-gateway / <code>create-wiki-site</code> scaffolder analogies</td><td>Same shared-contract idea as #1/#4, weaker on the deep-wiki specifics.</td></tr>
+        <tr><td class="num">10</td><td>Framework-agnostic vanilla <code>wiki-overlay.js</code> micro-package</td><td>Overlaps #2's <code>runtime-overlay</code> strategy; cut to avoid fragmenting axis A2.</td></tr>
+      </tbody>
+    </table>
+    <p style="color:var(--muted);font-size:0.9rem">All five axes have at least one survivor (A1: #1, #6 · A2: #2 · A3: #3 · A4: #4 · A5: #5). No deliberate coverage gaps.</p>
+  </section>
+
+  <footer class="composition-signal">
+    Composed 2026-06-24 by <code>please:ideate</code> from the user prompt context — focus: "add doc-site generators beyond VitePress (Docus, Fumadocs) to <code>skills/wiki-vitepress/</code> + <code>commands/build.md</code>". 48 raw candidates across 6 frames → 6 survivors (10 cut).
+  </footer>
+
+</div>
+</body>
+</html>

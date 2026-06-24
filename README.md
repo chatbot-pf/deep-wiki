@@ -35,7 +35,7 @@ copilot --plugin-dir ./deep-wiki
 | `/deep-wiki:agents` | Generate `AGENTS.md` files for pertinent folders (only where missing) |
 | `/deep-wiki:llms` | Generate `llms.txt` and `llms-full.txt` for LLM-friendly project access |
 | `/deep-wiki:ado` | Generate a Node.js script to convert wiki to Azure DevOps Wiki-compatible format |
-| `/deep-wiki:build` | Package generated wiki as a VitePress site with dark theme |
+| `/deep-wiki:build` | Package generated wiki as a static site (VitePress, Nextra, …) via the `wiki-site-core` adapter contract; `--tool` selects the generator (default VitePress) |
 | `/deep-wiki:deploy` | Generate GitHub Actions workflow to deploy wiki to GitHub Pages |
 
 ## Agents
@@ -57,7 +57,8 @@ View available agents: `/agents`
 | `wiki-changelog` | User asks about recent changes or wants a changelog |
 | `wiki-researcher` | User wants in-depth investigation across multiple files |
 | `wiki-qa` | User asks a question about how something works in the repo |
-| `wiki-vitepress` | User asks to build a site or package wiki as VitePress |
+| `wiki-site-core` | User asks to build/package a site — generator-neutral core + per-tool adapter contract (manifest read by build/deploy/CI) |
+| `wiki-vitepress` | User asks to build a site or package wiki as VitePress (the reference adapter of `wiki-site-core`) |
 | `wiki-onboarding` | User asks for onboarding docs or getting-started guides |
 | `wiki-agents-md` | User asks to generate AGENTS.md files for coding agent context |
 | `wiki-llms-txt` | User asks to generate llms.txt or make docs LLM-friendly |
@@ -109,7 +110,7 @@ Repository → Scan → Catalogue (JSON TOC) → Per-Section Pages → Assembled
                                                     ↓
                                          Onboarding Guides (Contributor, Staff Engineer, Executive, PM)
                                                     ↓
-                                         VitePress Site (Dark Theme + Click-to-Zoom)
+                                         Static Site — VitePress / Nextra (Dark Theme, per-tool adapter)
                                                     ↓
                                          AGENTS.md Files (Only If Missing)
                                                     ↓
@@ -123,7 +124,7 @@ Repository → Scan → Catalogue (JSON TOC) → Per-Section Pages → Assembled
 | 1 | `wiki-architect` | Analyzes repo → hierarchical JSON table of contents |
 | 2 | `wiki-page-writer` | For each TOC entry → rich Markdown with dark-mode Mermaid + citations |
 | 3 | `wiki-onboarding` | Generates 4 audience-tailored onboarding guides in `onboarding/` folder |
-| 4 | `wiki-vitepress` | Packages all pages into a VitePress dark-theme static site |
+| 4 | `wiki-site-core` | Packages all pages into a static site via a generator-neutral core + per-tool adapter manifest (VitePress reference + Nextra v4); `wiki-vitepress` is the VitePress adapter |
 | 5 | `wiki-changelog` | Git commits → categorized changelog |
 | 6 | `wiki-researcher` | Multi-turn investigation with evidence standard |
 | 7 | `wiki-qa` | Q&A grounded in actual source code |
@@ -184,7 +185,7 @@ deep-wiki/
 │   ├── llms.md              # llms.txt generation for LLM-friendly access
 │   ├── deploy.md            # GitHub Pages deployment workflow generation
 │   ├── ado.md               # Azure DevOps Wiki export script generation
-│   └── build.md             # VitePress site packaging
+│   └── build.md             # static-site packaging (multi-tool, --tool selector)
 ├── skills/                   # Auto-invoked based on context
 │   ├── wiki-architect/
 │   │   └── SKILL.md
@@ -196,10 +197,18 @@ deep-wiki/
 │   │   └── SKILL.md
 │   ├── wiki-qa/
 │   │   └── SKILL.md
-│   ├── wiki-vitepress/
-│   │   ├── SKILL.md         # VitePress packaging + dark-mode Mermaid
+│   ├── wiki-site-core/      # Generator-neutral packaging core + adapter contract
+│   │   ├── SKILL.md         # Core + per-tool adapter overview
 │   │   └── references/
-│   │       └── vitepress-build.md  # Full config, theme, CSS, zoom impl
+│   │       ├── adapter-contract.md   # Capability manifest schema (build/deploy/CI)
+│   │       ├── core-packaging.md     # Tool-independent logic (post-proc, citations, tokens, sidebar, llms.txt)
+│   │       └── adapters/
+│   │           ├── vitepress.md      # VitePress reference adapter (manifest + delta)
+│   │           └── nextra.md         # Nextra v4 adapter (baseline parity)
+│   ├── wiki-vitepress/      # VitePress adapter entry (thin pointer to wiki-site-core)
+│   │   ├── SKILL.md         # VitePress adapter overview + gotchas
+│   │   └── references/
+│   │       └── vitepress-build.md  # Full VitePress config, theme, CSS, zoom impl (authoritative)
 │   ├── wiki-onboarding/
 │   │   └── SKILL.md         # Onboarding guide generation
 │   ├── wiki-agents-md/

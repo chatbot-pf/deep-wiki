@@ -1,31 +1,33 @@
 ---
-description: Generate a GitHub Actions workflow to deploy the VitePress wiki site to GitHub Pages
+description: Generate a GitHub Actions workflow to deploy the wiki site (VitePress, Nextra, …) to GitHub Pages, parameterized from the chosen adapter's manifest
 ---
 
 # Deep Wiki: Deploy to GitHub Pages
 
-Generate a `.github/workflows/deploy-wiki.yml` GitHub Actions workflow that builds and deploys the VitePress wiki to GitHub Pages.
+Generate a `.github/workflows/deploy-wiki.yml` GitHub Actions workflow that builds and deploys the wiki to GitHub Pages. The workflow is **parameterized from the chosen adapter's manifest** (in `wiki-site-core`) — no tool-specific value is hardcoded.
 
-## Step 1: Check Prerequisites
+## Step 1: Check Prerequisites & Resolve Tool
 
-Before generating the workflow:
-
-1. **Verify wiki exists**: Check that `wiki/` directory and `wiki/package.json` exist
-   - If not, tell the user: _"Run `/deep-wiki:build` first to scaffold the VitePress site."_
-2. **Check for existing deployment workflows**: Search for ANY existing GitHub Pages workflow:
+1. **Verify wiki exists**: Check that `wiki/` and `wiki/package.json` exist.
+   - If not, tell the user: _"Run `/deep-wiki:build` first to scaffold the site."_
+2. **Resolve the target tool** (same order as `build`): a `--tool <name>` argument, else the **default `vitepress`**. Load the adapter at `skills/wiki-site-core/references/adapters/<tool>.md` and read its **manifest**:
+   - `build_cmd` — the build command (`npm run build` for vitepress, `next build` for nextra)
+   - `output_dir` — artifact directory relative to `wiki/` (`.vitepress/dist` for vitepress, `out` for nextra)
+   - `node_version` — Node major (20 for vitepress, 22 for nextra)
+   - `base_path` — how to set the project-site base path (`kind: config-edit` / `next-config` / `env`)
+   - `extra_files` — files to emit before upload (e.g. `.nojekyll`)
+3. **Check for existing deployment workflows**:
    ```bash
-   # Check for exact file
    ls .github/workflows/deploy-wiki.yml 2>/dev/null
-   # Check for any pages-related workflow
    grep -rl "deploy-pages\|pages-artifact\|github-pages" .github/workflows/ 2>/dev/null
    ```
-   - If `deploy-wiki.yml` exists → **STOP**. Tell the user: _"A deployment workflow already exists at `.github/workflows/deploy-wiki.yml`. No changes needed."_
-   - If a DIFFERENT pages workflow exists → **ASK the user**: _"I found an existing GitHub Pages workflow at `{path}`. Should I skip creating a new one, or create `deploy-wiki.yml` alongside it?"_
-   - If no pages workflow exists → proceed with generation
+   - If `deploy-wiki.yml` exists → **STOP**. _"A deployment workflow already exists at `.github/workflows/deploy-wiki.yml`. No changes needed."_
+   - If a DIFFERENT pages workflow exists → **ASK** whether to skip or create alongside it.
+   - If none → proceed.
 
 ## Step 2: Generate Workflow File
 
-Create `.github/workflows/deploy-wiki.yml`:
+Create `.github/workflows/deploy-wiki.yml`, substituting `{node_version}`, `{build_cmd}`, `{output_dir}` from the manifest, and adding an "Emit extra files" step only when `extra_files` is non-empty:
 
 ```yaml
 name: Deploy Wiki to GitHub Pages
@@ -58,7 +60,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: {node_version}        # from manifest
           cache: npm
           cache-dependency-path: wiki/package-lock.json
 
@@ -69,14 +71,22 @@ jobs:
         run: npm ci
         working-directory: wiki
 
-      - name: Build with VitePress
-        run: npm run build
+      - name: Build
+        run: {build_cmd}                       # from manifest
+        working-directory: wiki
+
+      # OMIT THIS STEP ENTIRELY when manifest extra_files is empty (e.g. vitepress),
+      # so the default workflow stays identical to today's. Include it only when
+      # extra_files is non-empty, with one `touch` per entry (e.g. nextra → .nojekyll):
+      - name: Emit extra files
+        run: |
+          touch {output_dir}/.nojekyll        # one line per manifest extra_files entry
         working-directory: wiki
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: wiki/.vitepress/dist
+          path: wiki/{output_dir}              # from manifest
 
   deploy:
     environment:
@@ -90,100 +100,55 @@ jobs:
         uses: actions/deploy-pages@v4
 ```
 
+**Default invariant (STOP):** with no `--tool` (vitepress), the manifest yields `node_version: 20`, `build_cmd: npm run build`, `output_dir: .vitepress/dist`, and empty `extra_files` — so the generated workflow is byte-equivalent to the pre-refactor VitePress workflow. A changed default would break existing users' Pages deploys.
+
 ### Workflow Details
 
-| Setting | Value | Why |
-|---------|-------|-----|
-| **Trigger** | Push to `main` on `wiki/**` paths | Only rebuilds when wiki content changes |
-| **Manual trigger** | `workflow_dispatch` | Allows manual re-deployment |
-| **Node version** | 20 | LTS, required for VitePress 1.x |
-| **Cache** | npm with `wiki/package-lock.json` | Speeds up subsequent builds |
-| **Concurrency** | `pages` group, no cancel | Prevents parallel deploys |
-| **Permissions** | `contents: read`, `pages: write`, `id-token: write` | Minimum required for Pages deployment |
+| Setting | Source | Why |
+|---------|--------|-----|
+| **Node version** | manifest `node_version` | VitePress 1.x → 20; Nextra v4 → 22 |
+| **Build command** | manifest `build_cmd` | `npm run build` (vitepress) / `next build` (nextra) |
+| **Artifact path** | `wiki/` + manifest `output_dir` | `.vitepress/dist` (vitepress) / `out` (nextra) |
+| **Extra files** | manifest `extra_files` | e.g. `.nojekyll` so Next/Astro `_next` assets are served |
+| **Trigger / concurrency / permissions** | fixed | Same across tools |
 
-## Step 3: Update VitePress Config for GitHub Pages
+## Step 3: Set the Base Path (from manifest `base_path`)
 
-Check if `wiki/.vitepress/config.mts` needs a `base` path. GitHub Pages serves from:
-
-- **User/org site** (`username.github.io`): `base: '/'` (default, no change needed)
-- **Project site** (`username.github.io/repo-name`): `base: '/repo-name/'`
-
-Detect which case applies:
+GitHub Pages serves a project site from `/<repo-name>/`. Detect the case:
 
 ```bash
-# Get the repo name
 REPO_NAME=$(basename $(git remote get-url origin) .git)
 OWNER=$(git remote get-url origin | sed -E 's|.*[:/]([^/]+)/[^/]+\.git|\\1|')
 ```
 
-If the repo is NOT named `{owner}.github.io`, add the base path to `config.mts`:
+If the repo is NOT `{owner}.github.io`, inject the base path per the manifest's `base_path.kind`:
 
-```typescript
-export default defineConfig({
-  base: '/{repo-name}/',
-  // ... rest of config
-})
-```
+- **`config-edit`** (VitePress): set `base: '/{repo-name}/'` in `.vitepress/config.mts`.
+- **`next-config`** (Nextra): set `basePath: '/{repo-name}'` and `assetPrefix: '/{repo-name}/'` in `next.config.mjs`.
+- **`env`**: export the manifest's `base_path.key` env var (e.g. `NUXT_APP_BASE_URL=/{repo-name}/`) in the build step.
 
 ## Step 4: Generate package-lock.json
 
-If `wiki/package-lock.json` doesn't exist (required for `npm ci` in CI):
+If `wiki/package-lock.json` is missing (required for `npm ci`):
 
 ```bash
 cd wiki && npm install
 ```
 
-This generates the lock file. Remind the user to commit it.
+Remind the user to commit it.
 
 ## Step 5: Commit and Report
 
-After generating the workflow, output:
+Report the created workflow, any config/`next.config` base-path edit, the resolved tool, and the user actions: commit the workflow + lockfile, and enable **Settings → Pages → Source → GitHub Actions**. The site goes live at `https://{owner}.github.io/{repo-name}/` (project site) or `https://{owner}.github.io/` (user/org site).
 
-```
-## GitHub Pages Deployment Setup ✅
-
-### Files Created
-- `.github/workflows/deploy-wiki.yml` — GitHub Actions workflow
-
-### Files Modified
-- `wiki/.vitepress/config.mts` — Added `base: '/{repo-name}/'` (if project site)
-
-### What You Need To Do
-
-> ⚠️ IMPORTANT: GitHub Pages will NOT work until you complete step 2.
-
-1. **Commit the workflow file:**
-   ```bash
-   git add .github/workflows/deploy-wiki.yml wiki/package-lock.json
-   git commit -m "ci: add GitHub Pages deployment for wiki"
-   git push
-   ```
-
-2. **Enable GitHub Pages (REQUIRED — deployments will fail without this):**
-   - Go to your repo on GitHub → **Settings** → **Pages**
-   - Under **Build and deployment**, change **Source** to **"GitHub Actions"**
-   - Click **Save**
-   - Without this step, the workflow runs but the site is NOT published
-
-3. **Your wiki will be live at:**
-   - `https://{owner}.github.io/{repo-name}/` (project site)
-   - OR `https://{owner}.github.io/` (if repo is named `{owner}.github.io`)
-
-### Triggering Deployments
-- **Automatic**: Every push to `main` that changes `wiki/**` files
-- **Manual**: Go to Actions → "Deploy Wiki to GitHub Pages" → "Run workflow"
-```
-
-## Troubleshooting Guidance
-
-If the user reports issues, suggest checking:
+## Troubleshooting
 
 | Issue | Solution |
 |-------|----------|
-| 404 on deployed site | Verify `base` path in `config.mts` matches repo name |
+| 404 on deployed site | Verify the base path matches the repo name (per `base_path.kind`) |
 | Build fails on `npm ci` | Ensure `wiki/package-lock.json` is committed |
-| Pages not enabled | Go to Settings → Pages → Source → select "GitHub Actions" |
-| Workflow not triggering | Check that changes are in `wiki/**` and pushed to `main` |
-| Mermaid diagrams missing | Ensure `mermaid` and `vitepress-plugin-mermaid` are in `package.json` |
+| Pages not enabled | Settings → Pages → Source → "GitHub Actions" |
+| Next/Astro assets 404 | Ensure `.nojekyll` is emitted (manifest `extra_files`) |
+| Mermaid diagrams missing | Confirm the adapter's Mermaid wiring built (vitepress: `vitepress-plugin-mermaid`; nextra: `@theguild/remark-mermaid`) |
 
 $ARGUMENTS
