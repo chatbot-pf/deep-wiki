@@ -141,4 +141,21 @@ Test expectation: none — documentation. Verified by review: README and wiki-vi
 
 ## Surprises & Discoveries
 
-_(updated during implementation)_
+- Treating `vitepress-build.md` as untouched authoritative code (manifest+classification layer on top) made FR-007 behavior-identity hold *by construction* — far lower risk than re-expressing ~650 lines.
+- Post-processing transforms generalize cleanly as a **profile-keyed catalog** in the core (gated by `parser_profile`/`mermaid_strategy`), avoiding both VitePress-hardcoding and per-adapter duplication — the T002 STOP resolution.
+- "Byte-equivalent" was the wrong bar for the deploy *workflow* (generic step name differs); the right invariant is byte-identical *site output* + behavior-equivalent workflow.
+
+## Outcomes & Retrospective
+
+### What Was Shipped
+Generator-neutral `wiki-site-core` skill (adapter contract + tool-independent core), VitePress reference adapter, Nextra v4 baseline-parity adapter, `--tool` selector in build.md, manifest-parametrized deploy.md, and docs (wiki-vitepress pointer + README). 11 commits on `feat/multi-tool-wiki-packaging-20260624`, PR #2.
+
+### What Went Well
+Spec-compliance review returned 11/11 IMPLEMENTED with no Critical/PARTIAL. The "untouched VitePress code" strategy kept the regression bar safe by construction. Each task committed atomically with STOP-condition resolutions recorded in Progress.
+
+### What Could Improve
+The empirical smoke builds (VitePress before/after, Nextra fixture) were deferred — a golden-fixture parity harness would let the workflow's `code` execution mode verify packaging tracks automatically instead of relying on manual checks. This Markdown-prompt plugin has no test suite, so the TDD executor path didn't fit; authoring inline + review was the right call here.
+
+### Tech Debt Created
+- Deferred: run the VitePress before/after + Nextra fixture smoke builds before/at merge (PR checklist items).
+- Deferred adapters (Starlight+astro-mermaid first, then Docusaurus/Fumadocs/Docus) and the `build-time` Mermaid strategy + `mdc` parser profile remain unimplemented manifest values.
