@@ -1,0 +1,19 @@
+skills/wiki-vitepress/SKILL.md
+  s_c89ea35ddb64d0::t_155e12956efdac 114-126
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.10",
+  "base_commit_sha": "55ad59ae631dd99e1b31b9441fdb9219b2bd7968",
+  "prompts": {},
+  "sessions": {
+    "s_c89ea35ddb64d0": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "e97f68d3-92bf-40ce-9416-fdeeaf29e2f6",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Minsu Lee <minsu.lee@passionfactory.ai>"
+    }
+  }
+}
