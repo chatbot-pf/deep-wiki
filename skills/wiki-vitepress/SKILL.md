@@ -111,8 +111,19 @@ document.querySelectorAll('.mermaid').forEach(el => {
   el.addEventListener('click', () => {
     const modal = document.createElement('div')
     modal.className = 'mermaid-zoom-modal'
-    modal.innerHTML = el.outerHTML
-    modal.addEventListener('click', () => modal.remove())
+    modal.innerHTML = `<div class="mermaid">${el.innerHTML}</div>`
+
+    const close = () => {
+      modal.remove()
+      document.removeEventListener('keydown', esc)
+    }
+
+    function esc(e: KeyboardEvent) {
+      if (e.key === 'Escape') close()
+    }
+
+    modal.addEventListener('click', close)
+    document.addEventListener('keydown', esc)
     document.body.appendChild(modal)
   })
 })
