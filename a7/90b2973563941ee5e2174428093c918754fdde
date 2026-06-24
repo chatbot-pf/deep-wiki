@@ -1,0 +1,22 @@
+skills/wiki-qa/SKILL.md
+  s_c89ea35ddb64d0::t_711471723d8883 5
+  s_c89ea35ddb64d0::t_f318af88bad001 42-65,69
+commands/ask.md
+  s_c89ea35ddb64d0::t_2f1f1a98f00156 3-4,9,11
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.11",
+  "base_commit_sha": "a790b2973563941ee5e2174428093c918754fdde",
+  "prompts": {},
+  "sessions": {
+    "s_c89ea35ddb64d0": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "e97f68d3-92bf-40ce-9416-fdeeaf29e2f6",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Minsu Lee <minsu.lee@passionfactory.ai>"
+    }
+  }
+}
