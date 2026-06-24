@@ -50,7 +50,7 @@ flowchart TB
 
 ## Tasks
 
-- [ ] T001 Define the adapter-manifest contract and core/adapter skill layout (file: skills/wiki-site-core/SKILL.md) (file: skills/wiki-site-core/references/adapter-contract.md)
+- [x] T001 Define the adapter-manifest contract and core/adapter skill layout (file: skills/wiki-site-core/SKILL.md) (file: skills/wiki-site-core/references/adapter-contract.md)
   STOP: if the manifest fields can't express VitePress's base-path editing of config.mts declaratively, surface it before extraction — the contract shape changes.
 - [ ] T002 Extract the tool-independent core from vitepress-build.md into wiki-site-core references (post-processing, citations, palette/font tokens, sidebar+onboarding, llms.txt/AGENTS.md emission, landing page) (file: skills/wiki-site-core/references/core-packaging.md) (depends on T001)
   STOP: if a "tool-independent" rule turns out to depend on VitePress specifics (e.g. the `<br/>`→`<br>` fix is markdown-it-only), classify it as a parser_profile concern in the adapter, not the core.
@@ -124,7 +124,7 @@ Test expectation: none — documentation. Verified by review: README and wiki-vi
 
 ## Progress
 
-_(updated during implementation)_
+- T001 ✅ — Authored `skills/wiki-site-core/SKILL.md` (core + adapter overview, reference map) and `references/adapter-contract.md` (manifest schema: install/build/output/node/mermaid_strategy/parser_profile/dark_mode/base_path/extra_files/capabilities; Mermaid strategies, parser profiles, base-path mechanisms, capability tiers, consumption rules, add-an-adapter guide). STOP check cleared — VitePress base-path expressed declaratively as `base_path.kind: config-edit`. Commit: T001.
 
 ## Decision Log
 
