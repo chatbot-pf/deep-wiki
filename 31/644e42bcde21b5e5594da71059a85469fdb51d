@@ -1,0 +1,19 @@
+skills/wiki-architect/SKILL.md
+  s_c89ea35ddb64d0::t_b6c96de3218e88 70
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.11",
+  "base_commit_sha": "31644e42bcde21b5e5594da71059a85469fdb51d",
+  "prompts": {},
+  "sessions": {
+    "s_c89ea35ddb64d0": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "e97f68d3-92bf-40ce-9416-fdeeaf29e2f6",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Minsu Lee <minsu.lee@passionfactory.ai>"
+    }
+  }
+}
