@@ -15,10 +15,12 @@ There is no compiler, no test runner, and no dependency manifest at the repo roo
 
 The packaging commands scaffold a separate Node project under `wiki/`:
 
-- **VitePress 1.x** (current sole packager) on **Node 20** — `vitepress-plugin-mermaid`, `mermaid` 11.x, `medium-zoom`. Output `wiki/.vitepress/dist`. Deployed to GitHub Pages via a generated Actions workflow.
-- **Mermaid** for diagrams, with a dark-mode "three-layer fix" and a custom click-to-zoom SVG overlay.
+Packaging is **multi-tool** behind the `wiki-site-core` skill — a generator-neutral core (`references/core-packaging.md`) plus a declarative adapter manifest per tool (`references/adapter-contract.md`), read identically by `build`, `deploy`, and CI. v1 adapters:
 
-Planned additional packagers (behind a generator-neutral core + adapter contract): **Nextra v4** (React/Next, native Mermaid), **Starlight** (Astro, Mermaid via `astro-mermaid`), and others (Docusaurus, Fumadocs, Docus).
+- **VitePress 1.x** (reference adapter, full parity) on **Node 20** — `vitepress-plugin-mermaid`, `mermaid` 11.x, `medium-zoom`. Runtime Mermaid (three-layer dark fix + click-to-zoom SVG overlay + focus mode). Output `wiki/.vitepress/dist`. The authoritative build code stays in `skills/wiki-vitepress/references/vitepress-build.md` (unchanged).
+- **Nextra v4** (baseline parity) on **Node 22** — React/Next, native Mermaid via `@theguild/remark-mermaid`, MDX, static export to `wiki/out` + `.nojekyll`. Dark theme via shared design tokens; zoom/focus declared absent.
+
+`/deep-wiki:build --tool <name>` selects the generator (default VitePress). First follow-up adapter: **Starlight** (Astro, Mermaid via `astro-mermaid`). Further follow-ups: Docusaurus, Fumadocs, Docus.
 
 ## Tooling notes
 
