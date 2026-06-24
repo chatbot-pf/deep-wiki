@@ -1,0 +1,19 @@
+.claude-plugin/plugin.json
+  s_c89ea35ddb64d0::t_711acd3696a21d 4,6-8,10-11
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.11",
+  "base_commit_sha": "21048f740006f06ba82c460defd8ac51e27326b7",
+  "prompts": {},
+  "sessions": {
+    "s_c89ea35ddb64d0": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "e97f68d3-92bf-40ce-9416-fdeeaf29e2f6",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Minsu Lee <minsu.lee@passionfactory.ai>"
+    }
+  }
+}
