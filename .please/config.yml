@@ -1,0 +1,33 @@
+schema_version: 5          # Config schema version (do not edit manually)
+
+language: en               # Output language (ko | en)
+
+# GitHub integration (optional)
+# Issues are optional per track (issue_required unset → asked each time).
+# To link a GitHub Project for cross-repo tracking, uncomment and fill:
+# github:
+#   project: 25             # GitHub Project number (from URL: /orgs/chatbot-pf/projects/25)
+#   owner: chatbot-pf       # GitHub org or user owning the project
+#   issue_required: false    # Create GitHub Issue for every track (default: false)
+
+# Workflow policies (optional)
+# Stacked PR workflow is disabled (single PR per track). graphite (gt) is
+# installed; to enable later, run `gt init` then uncomment:
+# workflow:
+#   stacked_pr:
+#     enabled: true
+#     tool: graphite
+#     split_phases: true
+#     branch_prefix: tracks/
+
+# Document path overrides (optional — defaults shown)
+docs:
+  tracks: .please/docs/tracks
+  product-specs: .please/docs/product-specs
+  decisions: .please/docs/decisions
+  investigations: .please/docs/investigations
+  research: .please/docs/research
+  references: .please/docs/references
+  knowledge: .please/docs/knowledge
+  brainstorms: .please/docs/brainstorms
+  ideation: .please/docs/ideation
