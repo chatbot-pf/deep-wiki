@@ -1,0 +1,25 @@
+.claude/agent-memory/review-review-documentation-analyzer/deep-wiki-conventions.md
+  s_c89ea35ddb64d0::t_a64a098607ac44 1-41
+.claude/agent-memory/review-review-code-reviewer/MEMORY.md
+  s_c89ea35ddb64d0::t_69bc7f4d397b7e 1-3
+.claude/agent-memory/review-review-code-reviewer/command-skill-pairing.md
+  s_c89ea35ddb64d0::t_92d1e10866ef52 1-17
+.claude/agent-memory/review-review-documentation-analyzer/MEMORY.md
+  s_c89ea35ddb64d0::t_5648c24f448cf3 1-3
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.11",
+  "base_commit_sha": "d9575a9fa1014268c19ba28d17b7bee70fc41cbd",
+  "prompts": {},
+  "sessions": {
+    "s_c89ea35ddb64d0": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "e97f68d3-92bf-40ce-9416-fdeeaf29e2f6",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Minsu Lee <minsu.lee@passionfactory.ai>"
+    }
+  }
+}
