@@ -75,9 +75,12 @@ jobs:
         run: {build_cmd}                       # from manifest
         working-directory: wiki
 
-      # Only when manifest extra_files is non-empty — e.g. nextra needs .nojekyll:
+      # OMIT THIS STEP ENTIRELY when manifest extra_files is empty (e.g. vitepress),
+      # so the default workflow stays identical to today's. Include it only when
+      # extra_files is non-empty, with one `touch` per entry (e.g. nextra → .nojekyll):
       - name: Emit extra files
-        run: touch {output_dir}/.nojekyll
+        run: |
+          touch {output_dir}/.nojekyll        # one line per manifest extra_files entry
         working-directory: wiki
 
       - name: Upload artifact

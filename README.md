@@ -185,7 +185,7 @@ deep-wiki/
 │   ├── llms.md              # llms.txt generation for LLM-friendly access
 │   ├── deploy.md            # GitHub Pages deployment workflow generation
 │   ├── ado.md               # Azure DevOps Wiki export script generation
-│   └── build.md             # VitePress site packaging
+│   └── build.md             # static-site packaging (multi-tool, --tool selector)
 ├── skills/                   # Auto-invoked based on context
 │   ├── wiki-architect/
 │   │   └── SKILL.md
