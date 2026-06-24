@@ -1,11 +1,13 @@
 {
   "name": "deep-wiki",
   "description": "AI-powered wiki generator for code repositories. Generates comprehensive, Mermaid-rich documentation with dark-mode VitePress sites, onboarding guides, deep research, and source citations. Inspired by OpenDeepWiki and deepwiki-open.",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "author": {
-    "name": "thegovind"
+    "name": "Minsu Lee",
+    "email": "minsu.lee@passionfactory.ai",
+    "url": "https://github.com/amondnet"
   },
-  "homepage": "https://github.com/microsoft/skills/tree/main/.github/plugins/deep-wiki",
-  "repository": "https://github.com/microsoft/skills",
+  "homepage": "https://github.com/chatbot-pf/deep-wiki",
+  "repository": "https://github.com/chatbot-pf/deep-wiki",
   "license": "MIT"
 }
