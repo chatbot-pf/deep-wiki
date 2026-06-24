@@ -67,7 +67,7 @@ The catalogue MUST include an Onboarding section (always first, uncollapsed) con
 
 ## Language Detection
 
-Detect primary language from file extensions and build files, then select a comparison language:
+Detect the primary language for code examples by scanning build files and extensions (`package.json`, `*.csproj` / `*.sln`, `Cargo.toml`, `pyproject.toml`, `go.mod`), then select a comparison language:
 - C#/Java/Go/TypeScript → Python as comparison
 - Python → JavaScript as comparison
 - Rust → C++ or Go as comparison
