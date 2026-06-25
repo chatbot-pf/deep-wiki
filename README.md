@@ -12,8 +12,8 @@ Generate comprehensive, structured, Mermaid-rich documentation wikis for any cod
 
 ```bash
 # Inside Claude Code, run these slash commands:
-/plugin marketplace add microsoft/skills
-/plugin install deep-wiki@skills
+/plugin marketplace add pleaseai/claude-code-plugins
+/plugin install deep-wiki@pleaseai
 ```
 
 ### From a local directory
@@ -70,7 +70,8 @@ View available agents: `/agents`
 
 ```bash
 # Install the plugin (slash command inside Claude Code)
-/plugin install deep-wiki@skills
+/plugin marketplace add pleaseai/claude-code-plugins
+/plugin install deep-wiki@pleaseai
 
 # Generate a full wiki with onboarding guides and VitePress site
 /deep-wiki:generate
