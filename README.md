@@ -2,7 +2,7 @@
 
 > **Fork notice**: This repository is a fork of the [`.github/plugins/deep-wiki`](https://github.com/microsoft/skills/tree/main/.github/plugins/deep-wiki) plugin from [microsoft/skills](https://github.com/microsoft/skills). The license and copyright of the original follow upstream.
 
-**AI-Powered Wiki Generator for Code Repositories — GitHub Copilot CLI Plugin**
+**AI-Powered Wiki Generator for Code Repositories — Claude Code Plugin**
 
 Generate comprehensive, structured, Mermaid-rich documentation wikis for any codebase — with dark-mode VitePress sites, onboarding guides, and deep research capabilities. Distilled from the prompt architectures of [OpenDeepWiki](https://github.com/AIDotNet/OpenDeepWiki) and [deepwiki-open](https://github.com/AsyncFuncAI/deepwiki-open).
 
@@ -11,13 +11,15 @@ Generate comprehensive, structured, Mermaid-rich documentation wikis for any cod
 ### From a marketplace
 
 ```bash
-# Inside Copilot CLI, run these slash commands:
+# Inside Claude Code, run these slash commands:
 /plugin marketplace add microsoft/skills
 /plugin install deep-wiki@skills
 ```
 
+### From a local directory
+
 ```bash
-copilot --plugin-dir ./deep-wiki
+claude --plugin-dir ./deep-wiki
 ```
 
 ## Commands
@@ -67,7 +69,7 @@ View available agents: `/agents`
 ## Quick Start
 
 ```bash
-# Install the plugin (slash command inside Copilot CLI)
+# Install the plugin (slash command inside Claude Code)
 /plugin install deep-wiki@skills
 
 # Generate a full wiki with onboarding guides and VitePress site
