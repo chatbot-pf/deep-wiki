@@ -1,6 +1,6 @@
 # Adapter: Nextra v4
 
-The second v1 adapter — a maximally-different generator from VitePress (React/Next vs Vue, native build-time-ish Mermaid vs runtime, MDX vs markdown-it). Its purpose is to prove the contract is generator-neutral. It ships at **baseline parity**: dark theme via the design tokens, dark Mermaid (Nextra native), intact citations, and the sidebar + onboarding structure. Click-to-zoom and focus mode are declared absent (VitePress-tier, optional).
+The second v1 adapter — a maximally-different generator from VitePress (React/Next vs Vue, native build-time-ish Mermaid vs runtime, MDX vs markdown-it). Its purpose is to prove the contract is generator-neutral. It ships at **baseline parity**: a light/dark theme that follows the OS preference by default (dark scheme recolored via the design tokens), dark Mermaid (Nextra native), intact citations, and the sidebar + onboarding structure. Click-to-zoom and focus mode are declared absent (VitePress-tier, optional).
 
 ## Manifest
 
@@ -12,7 +12,7 @@ output_dir: "out"
 node_version: "22"
 mermaid_strategy: native
 parser_profile: mdx
-dark_mode: forced
+dark_mode: system
 base_path:
   kind: next-config
   target: "next.config.mjs"
@@ -32,8 +32,8 @@ Everything tool-independent (output structure, tokens, landing page, citations, 
 
 - **`package.json`** — `next`, `react`, `react-dom`, `nextra`, `nextra-theme-docs`, `@theguild/remark-mermaid`. Scripts: `"build": "next build"`. (Node 22+.)
 - **`next.config.mjs`** — wrap with `nextra({ ... })`; register `@theguild/remark-mermaid` in `mdxOptions.remarkPlugins` (this is the `native` Mermaid path — fenced ` ```mermaid ` blocks render with no client JS from the core). For static export set `output: 'export'`, `images: { unoptimized: true }`. For a project site, set `basePath` and `assetPrefix` (the manifest's `base_path` drives this; `deploy` injects the repo name).
-- **Theme + tokens** — import a `styles.css` that defines the design tokens (`--bg`, `--surface`, `--card`, `--border`, `--accent`, `--text`, `--muted`) as CSS variables and maps them onto Nextra's theme CSS variables, forcing dark (`dark_mode: forced`). Fonts: Inter + JetBrains Mono. No hex literals are re-introduced — the tokens are the single source.
-- **Mermaid (native)** — handled entirely by `@theguild/remark-mermaid`; dark mode follows the forced-dark theme. The core emits **no** Mermaid JS and skips the `mermaid_strategy: runtime` inline-style transform for this adapter.
+- **Theme + tokens (`dark_mode: system`)** — import a `styles.css` that defines the design tokens (`--bg`, `--surface`, `--card`, `--border`, `--accent`, `--text`, `--muted`) as CSS variables and maps them onto Nextra's theme CSS variables. The light/dark switcher stays **enabled** and the **default follows the OS preference** (`next-themes` default `system`/auto) — the tokens recolor the dark scheme while Nextra's native light scheme backs light mode. No hex literals are re-introduced for dark — the tokens are the single source. Fonts: Inter + JetBrains Mono.
+- **Mermaid (native)** — handled entirely by `@theguild/remark-mermaid`; Mermaid follows the **active** theme (OS preference by default, re-rendering when the user switches scheme). The core emits **no** Mermaid JS and skips the `mermaid_strategy: runtime` inline-style transform for this adapter.
 - **Navigation** — render the core's sidebar + onboarding-first spec into Nextra `_meta` files (one per directory): the onboarding group first, then the numbered section folders in order. This backs the `sidebar_onboarding` baseline capability.
 - **Pages / `parser_profile: mdx`** — the core emits the wiki pages as `.md` (not `.mdx`) and escapes bare `<T>` generics, so the generated Mermaid-heavy, citation-dense Markdown is consumed by Nextra without JSX-parser breakage. This resolves the T004 STOP condition: generic handling lives in the core's `mdx` profile, not in per-page hand-fixes.
 - **Citations** — plain Markdown links render natively in Nextra; nothing adapter-specific is required. Baseline `citations: true`.

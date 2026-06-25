@@ -35,7 +35,7 @@ copilot --plugin-dir ./deep-wiki
 | `/deep-wiki:agents` | Generate `AGENTS.md` files for pertinent folders (only where missing) |
 | `/deep-wiki:llms` | Generate `llms.txt` and `llms-full.txt` for LLM-friendly project access |
 | `/deep-wiki:ado` | Generate a Node.js script to convert wiki to Azure DevOps Wiki-compatible format |
-| `/deep-wiki:build` | Package generated wiki as a static site (VitePress, Nextra, …) via the `wiki-site-core` adapter contract; `--tool` selects the generator (default VitePress) |
+| `/deep-wiki:build` | Package generated wiki as a static site (VitePress, Nextra, Astro Starlight, …) via the `wiki-site-core` adapter contract; `--tool` selects the generator (default VitePress) |
 | `/deep-wiki:deploy` | Generate GitHub Actions workflow to deploy wiki to GitHub Pages |
 
 ## Agents
@@ -110,7 +110,7 @@ Repository → Scan → Catalogue (JSON TOC) → Per-Section Pages → Assembled
                                                     ↓
                                          Onboarding Guides (Contributor, Staff Engineer, Executive, PM)
                                                     ↓
-                                         Static Site — VitePress / Nextra (Dark Theme, per-tool adapter)
+                                         Static Site — VitePress / Nextra / Astro Starlight (Dark Theme, per-tool adapter)
                                                     ↓
                                          AGENTS.md Files (Only If Missing)
                                                     ↓
@@ -124,7 +124,7 @@ Repository → Scan → Catalogue (JSON TOC) → Per-Section Pages → Assembled
 | 1 | `wiki-architect` | Analyzes repo → hierarchical JSON table of contents |
 | 2 | `wiki-page-writer` | For each TOC entry → rich Markdown with dark-mode Mermaid + citations |
 | 3 | `wiki-onboarding` | Generates 4 audience-tailored onboarding guides in `onboarding/` folder |
-| 4 | `wiki-site-core` | Packages all pages into a static site via a generator-neutral core + per-tool adapter manifest (VitePress reference + Nextra v4); `wiki-vitepress` is the VitePress adapter |
+| 4 | `wiki-site-core` | Packages all pages into a static site via a generator-neutral core + per-tool adapter manifest (VitePress reference + Nextra v4 + Astro Starlight); `wiki-vitepress` is the VitePress adapter |
 | 5 | `wiki-changelog` | Git commits → categorized changelog |
 | 6 | `wiki-researcher` | Multi-turn investigation with evidence standard |
 | 7 | `wiki-qa` | Q&A grounded in actual source code |
@@ -204,7 +204,8 @@ deep-wiki/
 │   │       ├── core-packaging.md     # Tool-independent logic (post-proc, citations, tokens, sidebar, llms.txt)
 │   │       └── adapters/
 │   │           ├── vitepress.md      # VitePress reference adapter (manifest + delta)
-│   │           └── nextra.md         # Nextra v4 adapter (baseline parity)
+│   │           ├── nextra.md         # Nextra v4 adapter (baseline parity)
+│   │           └── starlight.md      # Astro Starlight adapter (baseline parity)
 │   ├── wiki-vitepress/      # VitePress adapter entry (thin pointer to wiki-site-core)
 │   │   ├── SKILL.md         # VitePress adapter overview + gotchas
 │   │   └── references/

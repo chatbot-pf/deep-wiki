@@ -1,5 +1,5 @@
 ---
-description: Generate a GitHub Actions workflow to deploy the wiki site (VitePress, Nextra, …) to GitHub Pages, parameterized from the chosen adapter's manifest
+description: Generate a GitHub Actions workflow to deploy the wiki site (VitePress, Nextra, Astro Starlight, …) to GitHub Pages, parameterized from the chosen adapter's manifest
 ---
 
 # Deep Wiki: Deploy to GitHub Pages
@@ -11,9 +11,9 @@ Generate a `.github/workflows/deploy-wiki.yml` GitHub Actions workflow that buil
 1. **Verify wiki exists**: Check that `wiki/` and `wiki/package.json` exist.
    - If not, tell the user: _"Run `/deep-wiki:build` first to scaffold the site."_
 2. **Resolve the target tool** (same order as `build`): a `--tool <name>` argument, else the **default `vitepress`**. Load the adapter at `skills/wiki-site-core/references/adapters/<tool>.md` and read its **manifest**:
-   - `build_cmd` — the build command (`npm run build` for vitepress, `next build` for nextra)
-   - `output_dir` — artifact directory relative to `wiki/` (`.vitepress/dist` for vitepress, `out` for nextra)
-   - `node_version` — Node major (20 for vitepress, 22 for nextra)
+   - `build_cmd` — the build command (`npm run build` for vitepress, `next build` for nextra, `astro build` for starlight)
+   - `output_dir` — artifact directory relative to `wiki/` (`.vitepress/dist` for vitepress, `out` for nextra, `dist` for starlight)
+   - `node_version` — Node major (20 for vitepress, 22 for nextra, 22 for starlight)
    - `base_path` — how to set the project-site base path (`kind: config-edit` / `next-config` / `env`)
    - `extra_files` — files to emit before upload (e.g. `.nojekyll`)
 3. **Check for existing deployment workflows**:
@@ -106,9 +106,9 @@ jobs:
 
 | Setting | Source | Why |
 |---------|--------|-----|
-| **Node version** | manifest `node_version` | VitePress 1.x → 20; Nextra v4 → 22 |
-| **Build command** | manifest `build_cmd` | `npm run build` (vitepress) / `next build` (nextra) |
-| **Artifact path** | `wiki/` + manifest `output_dir` | `.vitepress/dist` (vitepress) / `out` (nextra) |
+| **Node version** | manifest `node_version` | VitePress 1.x → 20; Nextra v4 → 22; Starlight → 22 |
+| **Build command** | manifest `build_cmd` | `npm run build` (vitepress) / `next build` (nextra) / `astro build` (starlight) |
+| **Artifact path** | `wiki/` + manifest `output_dir` | `.vitepress/dist` (vitepress) / `out` (nextra) / `dist` (starlight) |
 | **Extra files** | manifest `extra_files` | e.g. `.nojekyll` so Next/Astro `_next` assets are served |
 | **Trigger / concurrency / permissions** | fixed | Same across tools |
 
@@ -123,7 +123,7 @@ OWNER=$(git remote get-url origin | sed -E 's|.*[:/]([^/]+)/[^/]+\.git|\\1|')
 
 If the repo is NOT `{owner}.github.io`, inject the base path per the manifest's `base_path.kind`:
 
-- **`config-edit`** (VitePress): set `base: '/{repo-name}/'` in `.vitepress/config.mts`.
+- **`config-edit`** (VitePress / Starlight): set the manifest `base_path.key` (`base`) to `'/{repo-name}/'` in the manifest `base_path.target` (`.vitepress/config.mts` for VitePress, `astro.config.mjs` for Starlight).
 - **`next-config`** (Nextra): set `basePath: '/{repo-name}'` and `assetPrefix: '/{repo-name}/'` in `next.config.mjs`.
 - **`env`**: export the manifest's `base_path.key` env var (e.g. `NUXT_APP_BASE_URL=/{repo-name}/`) in the build step.
 
@@ -149,6 +149,6 @@ Report the created workflow, any config/`next.config` base-path edit, the resolv
 | Build fails on `npm ci` | Ensure `wiki/package-lock.json` is committed |
 | Pages not enabled | Settings → Pages → Source → "GitHub Actions" |
 | Next/Astro assets 404 | Ensure `.nojekyll` is emitted (manifest `extra_files`) |
-| Mermaid diagrams missing | Confirm the adapter's Mermaid wiring built (vitepress: `vitepress-plugin-mermaid`; nextra: `@theguild/remark-mermaid`) |
+| Mermaid diagrams missing | Confirm the adapter's Mermaid wiring built (vitepress: `vitepress-plugin-mermaid`; nextra: `@theguild/remark-mermaid`; starlight: `astro-mermaid`) |
 
 $ARGUMENTS

@@ -31,7 +31,7 @@ CI                   →  read chosen adapter's manifest      ┘     (tool-inde
 
 - **Core** (`references/core-packaging.md`) — Markdown post-processing, source-linked citations, the canonical dark palette + fonts as **design tokens**, dynamic sidebar with onboarding-first ordering, `llms.txt` / `llms-full.txt` / `AGENTS.md` emission, and the developer-focused landing page. Written once; applies to every adapter.
 - **Adapter contract** (`references/adapter-contract.md`) — the declarative **capability manifest** every adapter declares, and how `build`, `deploy`, and CI consume it. This is the single source of truth for tool-specific values — no tool's build command, output directory, or base-path logic is hardcoded in the commands.
-- **Adapters** (`references/adapters/<tool>.md`) — one per generator. Each carries a YAML manifest block at its head followed by the tool-specific scaffold/theme delta. v1 ships `vitepress` (reference) and `nextra`.
+- **Adapters** (`references/adapters/<tool>.md`) — one per generator. Each carries a YAML manifest block at its head followed by the tool-specific scaffold/theme delta. v1 ships `vitepress` (reference), `nextra`, and `starlight` (Astro Starlight).
 
 ## Reference Map
 
@@ -41,6 +41,7 @@ CI                   →  read chosen adapter's manifest      ┘     (tool-inde
 | [`references/core-packaging.md`](references/core-packaging.md) | Tool-independent packaging logic (post-processing, citations, tokens, sidebar, llms.txt, landing page) |
 | [`references/adapters/vitepress.md`](references/adapters/vitepress.md) | VitePress reference adapter — manifest + runtime-Mermaid / zoom / focus delta |
 | [`references/adapters/nextra.md`](references/adapters/nextra.md) | Nextra v4 adapter — manifest + native-Mermaid / MDX delta (baseline parity) |
+| [`references/adapters/starlight.md`](references/adapters/starlight.md) | Astro Starlight adapter — manifest + native-Mermaid (`astro-mermaid`) / content-collection delta (baseline parity) |
 
 ## Build
 
