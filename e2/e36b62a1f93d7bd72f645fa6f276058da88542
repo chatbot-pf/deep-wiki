@@ -1,0 +1,22 @@
+skills/wiki-site-core/references/adapter-contract.md
+  s_5566edb204e8d0::t_9c17649cad63ff 58
+skills/wiki-site-core/references/adapters/starlight.md
+  s_5566edb204e8d0::t_60c9d34eec919c 33
+  s_5566edb204e8d0::t_415d70b8084219 41
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.13",
+  "base_commit_sha": "e2e36b62a1f93d7bd72f645fa6f276058da88542",
+  "prompts": {},
+  "sessions": {
+    "s_5566edb204e8d0": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "dc5f7cf0-1b64-4a19-bd13-55ad30898977",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Minsu Lee <minsu.lee@passionfactory.ai>"
+    }
+  }
+}
