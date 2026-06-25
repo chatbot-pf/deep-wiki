@@ -55,7 +55,7 @@ capabilities:                   # which signature features this adapter provides
 `mermaid_strategy` declares how an adapter renders dark-mode Mermaid:
 
 - `runtime` — the generator renders Mermaid client-side as live SVG; the core's runtime-overlay path (three-layer dark fix + async-poll zoom) applies. **VitePress.**
-- `native` — the generator has built-in Mermaid (e.g. a remark plugin) that handles dark mode; the core emits no Mermaid JS. **Nextra (`@theguild/remark-mermaid`).**
+- `native` — the generator has built-in Mermaid (e.g. a remark plugin or integration) that handles dark mode; the core emits no Mermaid JS. **Nextra (`@theguild/remark-mermaid`), Starlight (`astro-mermaid`).**
 - `build-time` — Mermaid is pre-rendered to (dual light/dark) SVG at build time; the core emits no client Mermaid JS. _(Reserved for follow-up adapters; not implemented in v1.)_
 
 v1 implements `runtime` and `native` only. A new value is added when an adapter needs it.
@@ -65,7 +65,7 @@ v1 implements `runtime` and `native` only. A new value is added when an adapter 
 `parser_profile` selects which core post-processing transforms apply to the generated Markdown:
 
 - `markdown-it` — VitePress. The core applies the `<br/>`→`<br>` fix and wraps bare `<T>` generics.
-- `mdx` — Nextra / React generators. The core escapes bare `<T>` generics that the JSX parser would treat as elements, and emits `.md` (not `.mdx`) so the local-md path avoids JSX parsing entirely.
+- `mdx` — Nextra / React generators, and Astro/Starlight content collections. The core escapes bare `<T>` generics that the JSX or HTML-tag parser would treat as elements, and emits `.md` (not `.mdx`) so the local-md path avoids JSX parsing entirely.
 - `mdc` — Docus / Nuxt Content. The core guards the `---` props/slot delimiter. _(Reserved; not implemented in v1.)_
 
 v1 implements `markdown-it` and `mdx`. See `core-packaging.md` for the transforms each profile triggers.
@@ -87,7 +87,7 @@ Not every adapter must reproduce every signature feature. Capabilities split int
 - **Baseline (required of every adapter):** `dark_mermaid`, `citations`, `sidebar_onboarding`, plus the dark palette via tokens. An adapter that cannot reach baseline is not "supported".
 - **VitePress-tier (optional):** `click_to_zoom`, `focus_mode`. An adapter declares these `true`/`false`; declaring `false` is honest, not a failure — the build still succeeds, and the missing capability is reported, not silently dropped.
 
-The VitePress adapter declares all capabilities `true`. The Nextra adapter declares baseline `true` and the VitePress-tier capabilities `false` (v1 baseline parity).
+The VitePress adapter declares all capabilities `true`. The Nextra and Starlight adapters declare baseline `true` and the VitePress-tier capabilities `false` (v1 baseline parity).
 
 ## Consumption Rules
 
