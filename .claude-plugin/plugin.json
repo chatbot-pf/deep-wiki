@@ -1,7 +1,7 @@
 {
   "name": "deep-wiki",
   "description": "AI-powered wiki generator for code repositories. Generates comprehensive, Mermaid-rich documentation with dark-mode VitePress sites, onboarding guides, deep research, and source citations. Inspired by OpenDeepWiki and deepwiki-open.",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "author": {
     "name": "Minsu Lee",
     "email": "minsu.lee@passionfactory.ai",
