@@ -1,0 +1,25 @@
+version.txt
+  s_e1626f0a594be1::t_0faf029e576f97 1
+.github/workflows/release-please.yml
+  s_e1626f0a594be1::t_2e3624d5f88c73 1-19
+.release-please-manifest.json
+  s_e1626f0a594be1::t_b081abd23dab56 1-3
+release-please-config.json
+  s_e1626f0a594be1::t_44fa2d40e2cbcb 1-19
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.13",
+  "base_commit_sha": "5bc876c05ff861dcddec980636bcc5095ac19370",
+  "prompts": {},
+  "sessions": {
+    "s_e1626f0a594be1": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "9cf1bb88-700a-42ce-a43a-2089c83dba54",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Minsu Lee <minsu.lee@passionfactory.ai>"
+    }
+  }
+}
