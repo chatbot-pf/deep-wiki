@@ -1,0 +1,20 @@
+README.md
+  s_5389fd5044b703::t_93159514d025dc 73-74
+  s_5389fd5044b703::t_a797dc7b59ed30 15-16
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.13",
+  "base_commit_sha": "ede54ef24701f05727d53cf409e5cde92734415f",
+  "prompts": {},
+  "sessions": {
+    "s_5389fd5044b703": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b2a57fab-215a-46e4-b9ef-26bdf4a56cd6",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Minsu Lee <minsu.lee@passionfactory.ai>"
+    }
+  }
+}
