@@ -1,0 +1,50 @@
+commands/generate.md
+  s_1161b80bd9cf17::t_d54bd078623ea0 7
+  s_1161b80bd9cf17::t_d087c829ac058a 91,93,95-114
+  s_1161b80bd9cf17::t_319e4fee19eae7 122
+  s_1161b80bd9cf17::t_847bdb7cf65e29 71
+  s_1161b80bd9cf17::t_d3e7510691a74f 129
+  s_1161b80bd9cf17::t_026060a8c0023b 2
+skills/wiki-agents-md/SKILL.md
+  s_1161b80bd9cf17::t_fcc149092b9c6d 48
+  s_1161b80bd9cf17::t_46af78f83c5abb 337-344
+  s_1161b80bd9cf17::t_40a44cf755759f 294,300,303,305,314-315,319,326
+skills/wiki-ado-convert/SKILL.md
+  s_1161b80bd9cf17::t_a4d6c563f2fe4f 298
+  s_1161b80bd9cf17::t_674209c3ede6bc 27
+  s_1161b80bd9cf17::t_d4f83f23e7f90e 3
+  s_1161b80bd9cf17::t_feff9d00377177 13
+commands/ado.md
+  s_1161b80bd9cf17::t_d6938b3962626c 2
+  s_1161b80bd9cf17::t_c39c6abfdf24a5 10
+skills/wiki-page-writer/SKILL.md
+  s_1161b80bd9cf17::t_86744be9b65939 123-125
+  s_1161b80bd9cf17::t_af854c48648205 59-60
+  s_1161b80bd9cf17::t_1ccfddc6431f86 119
+commands/crisp.md
+  s_1161b80bd9cf17::t_4ac39e4a908ba1 169-171
+  s_1161b80bd9cf17::t_740aac7a4f08b1 124,131
+  s_1161b80bd9cf17::t_83f54aa545b8c9 18-19
+  s_1161b80bd9cf17::t_725451ee2a1cdb 183
+  s_1161b80bd9cf17::t_c9b3bc9574b88c 76
+  s_1161b80bd9cf17::t_d798c95042361c 2
+  s_1161b80bd9cf17::t_fd83eb907887b0 96,98,100-107,115,117
+skills/wiki-llms-txt/SKILL.md
+  s_1161b80bd9cf17::t_cf7a517845b9ff 122
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.8",
+  "base_commit_sha": "0175be25a52d9e4d46921c1b393e731b0ca79b16",
+  "prompts": {},
+  "sessions": {
+    "s_1161b80bd9cf17": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b1f6b219-4925-4372-b002-91c277cc2915",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Minsu Lee <minsu.lee@passionfactory.ai>"
+    }
+  }
+}
