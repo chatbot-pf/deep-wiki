@@ -1,6 +1,6 @@
 ---
 name: wiki-ado-convert
-description: Converts VitePress/GFM wiki markdown to Azure DevOps Wiki-compatible format. Generates a Node.js build script that transforms Mermaid syntax, strips front matter, fixes links, and outputs ADO-compatible copies to dist/ado-wiki/.
+description: Converts generated wiki Markdown (GFM, including VitePress/Nextra/Starlight artifacts) to Azure DevOps Wiki-compatible format. Generates a Node.js build script that transforms Mermaid syntax, strips front matter, fixes links, and outputs ADO-compatible copies to dist/ado-wiki/.
 license: MIT
 user-invocable: false
 metadata:
@@ -10,7 +10,7 @@ metadata:
 
 # ADO Wiki Converter
 
-Generate a Node.js build script that transforms VitePress/GFM markdown documentation into Azure DevOps Wiki-compatible format. The source files remain untouched — the script produces transformed copies in `dist/ado-wiki/`.
+Generate a Node.js build script that transforms the generated wiki Markdown (GFM — as produced for any site generator, VitePress/Nextra/Starlight) into Azure DevOps Wiki-compatible format. The source files remain untouched — the script produces transformed copies in `dist/ado-wiki/`. The transforms below defensively handle generator-specific artifacts (front matter, `:::` container directives, `.vitepress`/`out`/`dist` build dirs) so the same script works regardless of which generator packaged the site.
 
 ## Source Repository Resolution (MUST DO FIRST)
 
@@ -24,7 +24,7 @@ Before generating the build script, resolve the source repository context:
 
 ## Why This Is Needed
 
-Azure DevOps Wikis use a markdown dialect that differs from GFM and VitePress in several critical ways. Documentation that renders perfectly in VitePress will have broken diagrams, raw front matter, dead links, and rendering issues when published as an ADO Wiki.
+Azure DevOps Wikis use a markdown dialect that differs from GFM (and generator dialects like VitePress markdown-it or Nextra/Starlight MDX) in several critical ways. Documentation that renders perfectly in the generated site will have broken diagrams, raw front matter, dead links, and rendering issues when published as an ADO Wiki.
 
 ## Pre-flight Scan
 
@@ -295,6 +295,6 @@ The converted ADO wiki must maintain the same quality standards:
 
 - **Source files are NEVER modified** — only copies in `dist/ado-wiki/`
 - **Images must be copied too** — if source has images, copy them with same relative paths
-- The script should work with **any VitePress wiki**, not just this specific one
+- The script should work with **any generated wiki**, not just this specific one, regardless of which generator (VitePress/Nextra/Starlight) packaged it
 - Print statistics at the end showing count of each transformation type
 - Script uses zero external dependencies — only Node.js builtins

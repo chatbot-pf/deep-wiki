@@ -1,5 +1,5 @@
 ---
-description: Generate a fast, concise wiki for the current repository — optimized for speed, minimal tool calls, and avoiding rate limits. Produces a complete VitePress site without running builds.
+description: Generate a fast, concise wiki for the current repository — optimized for speed, minimal tool calls, and avoiding rate limits. Produces a complete documentation site (VitePress, Nextra, or Astro Starlight) without running builds.
 ---
 
 # Deep Wiki: Crisp (Fast Wiki Generation)
@@ -15,8 +15,8 @@ You are a Technical Documentation Architect. Generate a concise, high-signal wik
 - 1–2 diagrams per page (not 3–5)
 - Parallelize everything you can
 - Minimize tool calls — batch reads, scan directories once
-- Do NOT run `npm install` or `npm run build` — the deploy workflow handles that
-- Still produces a fully working VitePress site when built
+- Do NOT run `npm install` or the build command — the deploy workflow handles that
+- Still produces a fully working documentation site when built
 
 ## Process
 
@@ -73,7 +73,7 @@ Create these pages in `wiki/`:
 **Skip pages that don't apply.** A 5-page wiki for a small project is fine. Don't pad.
 
 **Per-page rules:**
-- VitePress frontmatter: `title` and `description`
+- Frontmatter: `title` and `description` (generator-neutral — consumed by all adapters)
 - 1–2 Mermaid diagrams max (dark-mode: fills `#2d333b`, borders `#6d5dfc`, text `#e6edf3`)
 - `<!-- Sources: file:line, file:line -->` after each diagram
 - At least 3 source file citations per page
@@ -93,11 +93,18 @@ Generate ONE onboarding guide: `wiki/onboarding/contributor-guide.md`
 
 Also create `wiki/onboarding/index.md` hub page linking to the contributor guide.
 
-### Step 5: Scaffold VitePress Site
+### Step 5: Scaffold the Documentation Site (no build)
 
-Create the full VitePress scaffolding in `wiki/`:
+Scaffold the site in `wiki/` via the **`wiki-site-core`** skill's adapter contract. **Resolve the target generator** in this order:
 
-**Files to create:**
+1. A `--tool <name>` argument in `$ARGUMENTS` (e.g. `--tool nextra`, `--tool starlight`).
+2. Otherwise the **default: `vitepress`** — no argument produces the same fast VitePress scaffold as before.
+
+If `--tool` names an unknown adapter, stop and list the available ones (`vitepress`, `nextra`, `starlight`).
+
+Load the chosen adapter (`skills/wiki-site-core/references/adapters/<tool>.md`), read its manifest, and create its scaffold files — **but do NOT run `install_cmd` or `build_cmd`**. Just write the files; the GitHub Actions workflow handles installs and builds.
+
+**Default (VitePress) files to create** — follow the `wiki-vitepress` skill ([`references/vitepress-build.md`](../skills/wiki-vitepress/references/vitepress-build.md)) for exact config, theme, and CSS specs:
 - `wiki/package.json` — VitePress + mermaid + medium-zoom deps
 - `wiki/.gitignore` — `node_modules/`, `.vitepress/cache/`, `.vitepress/dist/`
 - `wiki/.vitepress/config.mts` — Dark theme, Mermaid config, dynamic sidebar, `ignoreDeadLinks: true`
@@ -105,23 +112,23 @@ Create the full VitePress scaffolding in `wiki/`:
 - `wiki/.vitepress/theme/custom.css` — Full dark theme, Mermaid overrides, zoom CSS, focus mode CSS
 - `wiki/.vitepress/public/logo.svg` — Brand logo
 
-**Follow the `wiki-vitepress` skill ([`references/vitepress-build.md`](../skills/wiki-vitepress/references/vitepress-build.md)) for exact config, theme, and CSS specifications.** The key difference: do NOT run `npm install` or `npm run build` — just create the files. The GitHub Actions workflow will handle builds.
+**For `nextra` or `starlight`**, create the files listed in that adapter's "Scaffold delta" instead (`package.json` with the adapter's deps, the adapter's config file, and its theme/token wiring). Baseline parity: native dark Mermaid, dark palette via design tokens, citations, sidebar/onboarding — no click-to-zoom/focus mode.
 
-**Base path**: Check if this is a project site (needs `base: '/repo-name/'`) or user site (default `base: '/'`).
+**Base path**: Check if this is a project site (needs a base of `/repo-name/`) or a user site (default `/`), and set it via the adapter manifest's `base_path` mechanism (VitePress/Starlight: `base` in the config file; Nextra: `basePath` in `next.config.mjs`).
 
 ### Step 6: Generate AGENTS.md + llms.txt
 
 **AGENTS.md** (only if they don't already exist):
 - `./AGENTS.md` — Root project instructions (build, test, structure, conventions, boundaries)
 - `./CLAUDE.md` — Companion pointer to AGENTS.md
-- `wiki/AGENTS.md` — Wiki folder instructions (VitePress commands, content conventions)
+- `wiki/AGENTS.md` — Wiki folder instructions (the chosen generator's build/dev commands from the adapter manifest, content conventions)
 - `wiki/CLAUDE.md` — Companion pointer
 
 **llms.txt** (always generate):
 - `./llms.txt` — Root discovery (links into wiki/)
 - `wiki/llms.txt` — Wiki-relative links
 - `wiki/llms-full.txt` — Full page content inlined in `<doc>` blocks
-- `wiki/.vitepress/public/llms.txt` — Served at `/llms.txt` on deployed site
+- Copy `llms.txt` into the generator's public/static dir so it is served at `/llms.txt` on the deployed site (`.vitepress/public/` for VitePress, `public/` for Nextra and Starlight)
 
 Follow the `wiki-llms-txt` and `wiki-agents-md` skills but keep content proportional to the crisp wiki size.
 
@@ -159,9 +166,9 @@ After all steps complete, output:
 - ... (list all)
 
 ### Infrastructure
-- wiki/package.json — VitePress project
-- wiki/.vitepress/config.mts — Site config
-- wiki/.vitepress/theme/ — Dark theme + zoom
+- wiki/package.json — <generator> project (VitePress / Nextra / Starlight)
+- <generator config> — Site config (e.g. wiki/.vitepress/config.mts, next.config.mjs, astro.config.mjs)
+- <generator theme> — Dark theme / design tokens
 - wiki/AGENTS.md — Agent instructions
 - wiki/llms.txt — LLM-friendly summary
 - .github/workflows/deploy-wiki.yml — GitHub Pages deployment
@@ -173,7 +180,7 @@ After all steps complete, output:
 1. **Commit everything:**
    ```bash
    git add wiki/ .github/workflows/ llms.txt AGENTS.md CLAUDE.md
-   git commit -m "docs: add crisp wiki with VitePress site"
+   git commit -m "docs: add crisp wiki with documentation site"
    git push
    ```
 

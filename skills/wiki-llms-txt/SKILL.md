@@ -119,7 +119,7 @@ Generate three files:
 | File | Purpose | Discoverability |
 |------|---------|-----------------|
 | `./llms.txt` | Root discovery file | Standard path per llms.txt spec. GitHub MCP `get_file_contents` and `search_code` find this first. |
-| `wiki/llms.txt` | Wiki-relative links | For VitePress deployment and wiki-internal navigation. |
+| `wiki/llms.txt` | Wiki-relative links | For the deployed site (VitePress, Nextra, or Starlight) and wiki-internal navigation. |
 | `wiki/llms-full.txt` | Full inlined content | Comprehensive reference for agents needing all docs in one file. |
 
 The root `./llms.txt` links into `wiki/` (e.g., `[Guide](./wiki/onboarding/contributor-guide.md)`). The `wiki/llms.txt` uses wiki-relative paths (e.g., `[Guide](./onboarding/contributor-guide.md)`).
