@@ -1,5 +1,7 @@
 # 🌊 Deep Wiki
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
+
 > **Fork notice**: This repository is a fork of the [`.github/plugins/deep-wiki`](https://github.com/microsoft/skills/tree/main/.github/plugins/deep-wiki) plugin from [microsoft/skills](https://github.com/microsoft/skills). The license and copyright of the original follow upstream.
 
 **AI-Powered Wiki Generator for Code Repositories — Claude Code Plugin**
@@ -230,4 +232,6 @@ deep-wiki/
 
 ## License
 
-MIT
+Licensed under the [MIT License](./LICENSE).
+
+This repository is a fork of the `deep-wiki` plugin from [microsoft/skills](https://github.com/microsoft/skills) (MIT). The original copyright is retained; fork modifications are © Minsu Lee.
