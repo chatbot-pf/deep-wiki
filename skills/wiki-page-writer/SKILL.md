@@ -56,8 +56,8 @@ Scale the budget to the number of relevant files:
 
 ## Mandatory Requirements
 
-### VitePress Frontmatter
-Every page must have:
+### Frontmatter
+Pages are generator-neutral Markdown — the site generator (VitePress, Nextra, or Astro Starlight) is chosen later at packaging time by `wiki-site-core`. `title`/`description` frontmatter is consumed by all three. Every page must have:
 ```
 ---
 title: "Page Title"
@@ -116,12 +116,13 @@ description: "One-line description"
   | [Data Models](../03-data-layer/models.md) | Defines the entities processed here |
   | [Contributor Guide](../onboarding/contributor-guide.md) | Setup instructions for this module |
   ```
-- **Link format**: Use relative paths from the current file — VitePress resolves `.md` links to routes automatically
+- **Link format**: Use relative paths from the current file with the `.md` extension — every supported generator (VitePress, Nextra, Starlight) resolves `.md` links to routes, and the core's post-processing normalizes them per generator
 - **Anchor links**: Link to specific sections with `#kebab-case-heading` anchors (e.g., `[error handling](../02-architecture/overview.md#error-handling)`)
 - **Bidirectional where possible**: If page A links to page B, page B should link back to page A
 
-### VitePress Compatibility
-- Escape bare generics outside code fences: `` `List<T>` `` not bare `List<T>`
+### Site Compatibility (all generators)
+These keep the Markdown safe across every generator's parser (markdown-it for VitePress, MDX/JSX for Nextra and Starlight); the core applies per-`parser_profile` transforms on top:
+- Escape bare generics outside code fences: `` `List<T>` `` not bare `List<T>` (a bare `<T>` is parsed as an element by both markdown-it and JSX)
 - No `<br/>` in Mermaid blocks
 - All hex colors must be 3 or 6 digits
 
